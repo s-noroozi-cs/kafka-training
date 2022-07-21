@@ -1,0 +1,330 @@
+docker vs process
+
+novel netware-uptime
+
+--zoo.cfg
+4lw.commands.whitelist=*
+
+stat, ruok, conf, isro
+conf
+New in 3.3.0: Print details about serving configuration.
+
+cons
+New in 3.3.0: List full connection/session details for all clients 
+	connected to this server. Includes information on numbers of packets 
+	received/sent, session id, operation latencies, last operation performed, etc...
+
+crst
+New in 3.3.0: Reset connection/session statistics for all connections.
+
+dump
+Lists the outstanding sessions and ephemeral nodes. 
+This only works on the leader.
+
+envi
+Print details about serving environment
+
+ruok
+Tests if server is running in a non-error state. The server 
+	will respond with imok if it is running. Otherwise it will 
+	not respond at all.
+
+A response of "imok" does not necessarily indicate that 
+	the server has joined the quorum, just that the server 
+	process is active and bound to the specified client port. 
+	Use "stat" for details on state wrt quorum and client connection information.
+
+srst
+Reset server statistics.
+
+srvr
+New in 3.3.0: Lists full details for the server.
+
+stat
+Lists brief details for the server and connected clients.
+
+wchs
+New in 3.3.0: Lists brief information on watches for the server.
+
+wchc
+New in 3.3.0: Lists detailed information on watches for 
+	the server, by session. This outputs a list of sessions(connections) 
+	with associated watches (paths). Note, depending on the number of 
+	watches this operation may be expensive (ie impact server performance), 
+	use it carefully.
+
+wchp
+New in 3.3.0: Lists detailed information on watches for 
+	the server, by path. This outputs a list of paths (znodes) 
+	with associated sessions. Note, depending on the number of 
+	watches this operation may be expensive (ie impact server performance), 
+	use it carefully.
+
+mntr
+New in 3.4.0: Outputs a list of variables that could be 
+	used for monitoring the health of the cluster.
+
+
+zookeeper docker
+docker run -it --rm -p 2181:2181 zookeeper:3.5.6
+
+wurstmeister/kafka
+
+docker run -it --rm 
+-e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181   
+-e KAFKA_LISTENERS=PLAINTEXT://:9092 
+-e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9092 
+-p 9092:9092 
+wurstmeister/kafka:2.13-2.6.0
+
+
+./kafka-console-producer.sh  
+	--bootstrap-server 192.168.163.63:9092 
+	--topic t1
+
+./kafka-console-consumer.sh 
+	--bootstrap-server 192.168.163.63:9092 
+	--topic t1 
+	--from-beginning
+
+
+./kafka-console-producer.sh  
+	--bootstrap-server 192.168.163.63:9092 
+	--topic t1 
+	--property parse.key=true 
+	--property key.separator=:
+
+
+
+./kafka-topics.sh 
+	--bootstrap-server 192.168.163.63:9092 
+	--describe
+
+./kafka-topics.sh --bootstrap-server 192.168.163.63:9092 --alter --topic t1 --partitions 3
+
+
+cloud native computation foundation
+	confluent
+	strimzi
+
+------ producer parameter
+
+--request-required-acks 0,1,-1
+
+--request-timeout-ms
+
+--message-send-max-retries
+
+
+min.insync.replicas
+
+-e KAFKA_MIN_INSYNC_REPLICAS=3
+
+
+./kafka-configs 
+	--bootstrap-server 192.168.163.63:9092 
+	--entity-type brokers 
+	--entity-default 
+	--alter 
+	--add-config  min.insync.replicas=1
+
+./kafka-configs 
+	--bootstrap-server 192.168.163.63:9092 
+	--entity-type brokers 
+	--entity-name 1001 
+	--alter 
+	--add-config  min.insync.replicas=1
+
+
+
+
+
+./kafka-topics.sh --bootstrap-server 192.168.163.63:9092 --describe --topic __consumer_offsets
+
+./kafka-topics.sh --bootstrap-server 192.168.163.63:9092 --alter --topic __consumer_offsets --partitions 100
+
+
+{
+ "version":1,
+ "partitions":[
+      {"topic":"__consumer_offsets","partition":0,"replicas":[1001,1002]},
+	  {"topic":"__consumer_offsets","partition":1,"replicas":[1001,1002]},
+	  {"topic":"__consumer_offsets","partition":2,"replicas":[1002,1001]},
+	  {"topic":"__consumer_offsets","partition":3,"replicas":[1001,1002]},
+	  {"topic":"__consumer_offsets","partition":4,"replicas":[1002,1001]},
+	  {"topic":"__consumer_offsets","partition":5,"replicas":[1002,1001]},
+	  {"topic":"__consumer_offsets","partition":6,"replicas":[1002,1001]},
+	  {"topic":"__consumer_offsets","partition":7,"replicas":[1001,1002]},
+	  {"topic":"__consumer_offsets","partition":8,"replicas":[1002,1001]},
+	  {"topic":"__consumer_offsets","partition":9,"replicas":[1001,1002]}
+ ]
+}
+
+./kafka-reassign-partitions.sh --bootstrap-server 192.168.163.63:9092 --reassignment-json-file 1.json --execute
+
+
+
+./kafka-consumer-groups.sh --bootstrap-server 192.168.163.63:9092 --describe --all-groups
+
+
+./kafka-console-producer.sh --bootstrap-server 192.168.163.63:9092 --topic t
+
+./kafka-console-consumer.sh --bootstrap-server 192.168.163.63:9092 --topic t --group g1 --from-beginning
+
+
+
+
+---zookeeper cluster
+
+
+docker run -it --rm -e ZOO_MY_ID=1 -e ZOO_SERVERS="server.1=0.0.0.0:2888:3888;2181 server.2=192.168.163.63:2882:3882;2182 server.3=192.168.163.63:2883:3883;2183" -p 2181:2181 -p 2888:2888 -p 3888:3888  zookeeper:3.5.6
+ 
+docker run -it --rm -e ZOO_MY_ID=2 -e ZOO_SERVERS="server.1=192.168.163.63:2888:3888;2181 server.2=0.0.0.0:2888:3888;2181 server.3=192.168.163.63:2883:3883;2183" -p 2182:2181 -p 2882:2888 -p 3882:3888  zookeeper:3.5.6
+
+
+docker run -it --rm -e ZOO_MY_ID=3 -e ZOO_SERVERS="server.1=192.168.163.63:2888:3888;2181 server.2=192.168.163.63:2882:3882;2182 server.3=0.0.0.0:2888:3888;2181" -p 2183:2181 -p 2883:2888 -p 3883:3888  zookeeper:3.5.6
+
+
+
+docker run --rm -it -p 9092:9092 -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181,192.168.163.63:2182,192.168.163.63:2183 -e KAFKA_LISTENERS=PLAINTEXT://:9092 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9092 wurstmeister/kafka:2.13-2.6.0
+
+
+docker run -it --rm -e ZOO_4LW_COMMANDS_WHITELIST="*" --publish 2181:2181 zookeeper:3.5.6
+
+echo cons | nc 127.0.0.1 2181
+
+
+------ consumer group, instance id
+-v ?:/usr/share/logstash/pipeline/logstash.conf
+
+
+docker run -d --rm -p 2181:2181 zookeeper:3.5.6
+
+docker run -d --rm -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181   -e KAFKA_LISTENERS=PLAINTEXT://:9092 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9092 -p 9092:9092 wurstmeister/kafka:2.13-2.6.0
+
+docker run -it -v d:\dev-tools\cmder\kafka-to-console.conf:/usr/share/logstash/pipeline/logstash.conf jdbc-batch-output-logstash:7.8.0
+
+./kafka-console-consumer.sh --bootstrap-server 192.168.163.63:9092 --topic test --consumer-property group.id=g1 --consumer-property=group.instance.id=b
+
+
+
+---- partition assignment strategy
+./kafka-console-consumer.sh --bootstrap-server 192.168.163.63:9092 --topic t1 --consumer-property group.id=g1 --consumer-property partition.assignment.strategy=org.apache.kafka.clients.consumer.RoundRobinAssignor
+
+./kafka-console-consumer.sh --bootstrap-server 192.168.163.63:9092 --topic t1 --consumer-property group.id=g1 --consumer-property partition.assignment.strategy=org.apache.kafka.clients.consumer.RangeAssignor
+
+----- auto leader , leader imbalance workshop
+docker run -d --rm -p 2181:2181 zookeeper:3.5.6
+
+docker run -d --rm   -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-1  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9092 -e KAFKA_ADVERTISED_LISTEN	ERS=PLAINTEXT://192.168.163.63:9092 -p 9092:9092 wurstmeister/kafka:2.13-2.6.0
+
+docker run -d --rm  -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-2  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9093 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9093 -p 9093:9093 wurstmeister/kafka:2.13-2.6.0
+
+docker run -d --rm  -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-3  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9094 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9094 -p 9094:9094 wurstmeister/kafka:2.13-2.6.0
+
+
+./kafka-leader-election.sh --bootstrap-server 192.168.163.63:9092 --election-type "preferred" --all-topic-partitions
+
+./kafka-topics.sh --bootstrap-server 192.168.163.63:9092 --describe
+
+
+-e KAFKA_AUTO_LEADER_REBALANCE_ENABLE=true -e KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS=5
+
+
+
+
+----- controller logs 
+docker run -d --rm -p 2181:2181 zookeeper:3.5.6
+
+docker run -d --rm   -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-1  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9092 -e KAFKA_ADVERTISED_LISTEN	ERS=PLAINTEXT://192.168.163.63:9092 -p 9092:9092 wurstmeister/kafka:2.13-2.6.0
+
+docker run -d --rm  -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-2  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9093 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9093 -p 9093:9093 wurstmeister/kafka:2.13-2.6.0
+
+docker run -d --rm  -v c:\brokers:/kafka -e KAFKA_LOG_DIRS=/kafka/broker-3  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9094 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://192.168.163.63:9094 -p 9094:9094 wurstmeister/kafka:2.13-2.6.0
+
+**** conect to zookeeper and see controller value
+*** start-stop brokers to manage controller event
+*** show epoch
+
+---- compression, linger, retention
+
+./kafka-console-producer.sh --bootstrap-server 192.168.163.63:9092 --topic test
+
+./kafka-console-consumer.sh --bootstrap-server 192.168.163.63:9092 --topic test
+
+-producer-property linger.ms=10000
+
+
+docker run -it --rm -v d:\dev-tools\cmder\file-to-kafka.conf:/usr/share/logstash/pipeline/logstash.conf -v d:\dev-tools\cmder\test.json:/var/log/test.json jdbc-batch-output-logstash:7.8.0
+
+
+
+docker run -it --rm -p 2181:2181 zookeeper:3.5.6
+
+docker run -it --rm  -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181  -e KAFKA_LISTENERS=PLAINTEXT://:9092 -e KAFKA_ADVERTISED_LISTEN	ERS=PLAINTEXT://192.168.163.63:9092 -p 9092:9092 wurstmeister/kafka:2.13-2.6.0
+
+
+---- retenion
+
+KAFKA_LOG_RETENTION_MS=3000
+
+KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS=10000
+
+------- compact 
+
+KAFKA_LOG_CLEANUP_POLICY=compact
+
+1-solution A
+KAFKA_LOG_SEGMENT_BYTES=70
+KAFKA_LOG_CLEANER_MIN_CLEANABLE_RATIO=0.01
+
+2-solution B
+KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100
+
+
+------ tls,authentication
+
+1. KeyStore Explorer generate key pair,key store, trust store
+
+2. docker run -d -p 2181:2181 zookeeper:3.5.6
+
+3. start kafka
+
+docker run -d -e KAFKA_ZOOKEEPER_CONNECT=192.168.163.63:2181 -v c:\brokers:/certs -e KAFKA_SECURITY_INTER_BROKER_PROTOCOL=SSL -e KAFKA_SSL_ENABLED_PROTOCOLS=TLSv1.2 -e KAFKA_SSL_CLIENT_AUTH=required -e KAFKA_LISTENERS=SSL://0.0.0.0:9092 -e KAFKA_ADVERTISED_LISTENERS=SSL://192.168.163.63:9092 -p 9092:9092 -e KAFKA_SSL_KEYSTORE_LOCATION=/certs/ks.jks -e KAFKA_SSL_KEYSTORE_PASSWORD=123 -e KAFKA_SSL_KEY_PASSWORD=123 -e KAFKA_SSL_TRUSTSTORE_LOCATION=/certs/ts.jks -e KAFKA_SSL_TRUSTSTORE_PASSWORD=123 wurstmeister/kafka:2.13-2.6.0
+
+4. connect using  command line and describe kafka topics
+
+------- Authorization - ACL
+-e KAFKA_AUTHORIZER_CLASS_NAME=kafka.security.auth.SimpleAclAuthorizer
+
+1. cluster authorization fail :-)
+  connect to kafka session and using kafka-acls
+  
+./kafka-acls.sh --authorizer-properties zookeeper.connect=192.168.163.63:2181 --add --allow-principal User:KAFKA --operation All --topic '*' --group '*'  --cluster
+
+-e LOG4J_LOGGER_KAFKA_AUTHORIZER_LOGGER=DEBUG, authorizerAppender
+
+
+-e KAFKA_SSL_PRINCIPAL_MAPPING_RULES="RULE:^.*[Cc][Nn]=([a-zA-Z0-9.*]*).*$/$1/L,DEFAULT"
+
+-e KAFKA_SOCKET_REQUEST_MAX_BYTES=1073741824
+
+-e KAFKA_HEAP_OPTS="-Xmx8G -Xms8G"
+
+- create client key store, trust store
+- add certificate two both trust store
+test authorization scenario
+
+
+test add and remove at runtime
+./kafka-acls.sh --authorizer-properties zookeeper.connect=192.168.163.63:2181 --add --allow-principal User:client --operation All --topic '*' --group '*'  --cluster
+
+./kafka-acls.sh --authorizer-properties zookeeper.connect=192.168.163.63:2181 --remove --allow-principal User:client --operation All --topic '*' --group '*'  --cluster
+
+add entry to container host file
+docker run --> --add-host=kafka:192.168.163.63
+
+
+--- secure zookeeper
+D:\svn-repository\InstantPayment\trunk\zookeeper-x509-auth-npsd
+http://192.168.163.230:9090/xwiki/bin/view/Menu/R%26D/Zookeeper%20Secure%20Configuration
