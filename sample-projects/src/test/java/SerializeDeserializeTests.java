@@ -96,7 +96,7 @@ public class SerializeDeserializeTests {
         Assertions.assertTrue(records.count() > 0);
     }
 
-    
+
 
 
 }
