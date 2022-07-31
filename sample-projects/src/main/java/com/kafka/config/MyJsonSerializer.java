@@ -15,7 +15,7 @@ public class MyJsonSerializer implements Serializer {
         }
     }
 
-    private static Gson gson = new GsonBuilder()
+    private static final Gson gson = new GsonBuilder()
             .setPrettyPrinting()
             .registerTypeAdapter(LocalDateTime.class, new LocalDateAdapter())
             .create();

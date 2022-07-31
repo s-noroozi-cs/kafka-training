@@ -7,10 +7,11 @@ import org.apache.kafka.common.serialization.Serializer;
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
 
-public class MyCustomSerialize implements Serializer<LogModel> {
+public class MyCustomSerialize implements Serializer {
     @Override
-    public byte[] serialize(String s, LogModel logModel) {
+    public byte[] serialize(String s, Object object) {
         try {
+            LogModel logModel = (LogModel) object;
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             ObjectOutputStream oos = new ObjectOutputStream(baos);
             oos.writeObject(logModel);
