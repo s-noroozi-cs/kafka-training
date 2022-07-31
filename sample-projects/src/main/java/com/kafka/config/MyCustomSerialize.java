@@ -2,7 +2,6 @@ package com.kafka.config;
 
 import com.exception.LogModelSerializeException;
 import com.model.LogModel;
-import org.apache.kafka.common.header.Headers;
 import org.apache.kafka.common.serialization.Serializer;
 
 import java.io.ByteArrayOutputStream;
