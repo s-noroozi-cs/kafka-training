@@ -13,6 +13,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.IntStream;
 
 public class SerializeDeserializeTests {
 
@@ -68,35 +70,55 @@ public class SerializeDeserializeTests {
         consumer.subscribe(Arrays.asList("test"));
 
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
-        String msg = "sample message";
-        producer.send(new ProducerRecord("test", msg));
+        IntStream.range(1, 10)
+                .mapToObj(i -> "sample message-" + i * 2)
+                .map(msg -> new ProducerRecord("test", msg))
+                .forEach(producer::send);
         producer.close();
 
         ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
-
-        Assertions.assertEquals(0, records.count());
-
         consumer.unsubscribe();
         consumer.close();
+
+        Assertions.assertEquals(0, records.count());
     }
 
     @Test
-    void test_consume_earliest() throws Exception{
-        KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
-        String msg = "sample message";
-        producer.send(new ProducerRecord("test", msg));
-        producer.close();
+    void test_consume_earliest() {
+        AtomicBoolean hasRecord = new AtomicBoolean(false);
 
         Map consumerCfg = KafkaUtil.getDefaultConsumerConfig();
         consumerCfg.put(KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, "earliest");
-        consumerCfg.put(KafkaUtil.KAFKA_CONFIG_GROUP_ID, "test-earliest-" + System.currentTimeMillis());
+        consumerCfg.put(KafkaUtil.KAFKA_CONFIG_GROUP_ID, "test");
         KafkaConsumer consumer = new KafkaConsumer(consumerCfg);
         consumer.subscribe(Arrays.asList("test"));
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
-        Assertions.assertTrue(records.count() > 0);
+        Thread thread = new Thread(() -> {
+            while (true) {
+                ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+                hasRecord.set(records.count() > 0);
+                if (hasRecord.get())
+                    break;
+            }
+        });
+        thread.setDaemon(true);
+        thread.start();
+
+        KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
+        IntStream.range(1, 10)
+                .mapToObj(i -> "sample message-" + i * 2)
+                .map(msg -> new ProducerRecord("test", msg))
+                .forEach(producer::send);
+        producer.close();
+
+        long startTime = System.currentTimeMillis();
+        while (System.currentTimeMillis() - startTime < 500 && !hasRecord.get())
+            ;
+
+        consumer.unsubscribe();
+        consumer.close();
+
+        Assertions.assertTrue(hasRecord.get());
     }
-
-
 
 
 }
