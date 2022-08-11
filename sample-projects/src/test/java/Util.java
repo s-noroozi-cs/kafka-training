@@ -3,7 +3,7 @@ import java.util.Random;
 public class Util {
 
     public static int getRandomNumber() {
-        return new Random().nextInt(1_000);
+        return new Random().nextInt(10_000);
     }
 
     public static String getRandomTopicName() {
