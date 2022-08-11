@@ -3,13 +3,11 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class OrderingTests {
@@ -40,14 +38,14 @@ public class OrderingTests {
     }
 
     @Test
-    void test_order_with_multiple_partitions_without_key() {
+    void test_order_with_multiple_partitions_with_random_key() {
         String topicName = Util.getRandomTopicName();
         int partitions = 10;
         KafkaUtil.createTopic(topicName,partitions);
 
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
         IntStream.range(0, 10)
-                .mapToObj(i -> new ProducerRecord(topicName,i ,null,String.valueOf(i)))
+                .mapToObj(i -> new ProducerRecord(topicName, String.valueOf(i),String.valueOf(i)))
                 .forEach(producer::send);
         producer.close();
 
@@ -68,6 +66,33 @@ public class OrderingTests {
 
         Assertions.assertEquals(false,hasOrder);
 
+    }
+
+    @Test
+    void test_order_with_key(){
+        String topicName = Util.getRandomTopicName();
+        int partitions = 10;
+        KafkaUtil.createTopic(topicName,partitions);
+
+        KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
+        IntStream.range(0, 10)
+                .mapToObj(i -> new ProducerRecord(topicName,"keep-order",String.valueOf(i)))
+                .forEach(producer::send);
+        producer.close();
+
+        Map<String, String> cfg = KafkaUtil.getDefaultConsumerConfig();
+        cfg.put(KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST);
+        List<Integer> items = new ArrayList();
+        KafkaConsumer consumer = new KafkaConsumer(cfg);
+        consumer.subscribe(Arrays.asList(topicName));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(300));
+        records.forEach(i -> items.add(Integer.parseInt(i.value())));
+        consumer.unsubscribe();
+        consumer.close();
+
+        for (int i = 0; i < 10; i++) {
+            Assertions.assertEquals(i, items.get(i));
+        }
     }
 
 
