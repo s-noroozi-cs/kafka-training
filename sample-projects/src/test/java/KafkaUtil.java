@@ -3,9 +3,11 @@ import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.common.KafkaFuture;
-import org.apache.kafka.common.protocol.types.Field;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class KafkaUtil {
     public static String KAFKA_CONFIG_BOOTSTRAP_SERVERS = "bootstrap.servers";
@@ -31,7 +33,6 @@ public class KafkaUtil {
         config.put(KAFKA_CONFIG_KEY_SERIALIZER, "org.apache.kafka.common.serialization.StringSerializer");
         config.put(KAFKA_CONFIG_VALUE_SERIALIZER, "org.apache.kafka.common.serialization.StringSerializer");
         config.put(KAFKA_CONFIG_ACK, "all");
-        config.put(KAFKA_CONFIG_LINGER_MS, "1");
         return config;
     }
 
