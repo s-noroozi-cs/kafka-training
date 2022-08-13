@@ -1,64 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<packaging>jar</packaging>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
 
-	<groupId>com.training</groupId>
-	<artifactId>kafka</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>kafka</name>
-	<description>Sample project for Apache Kafka training</description>
+    <groupId>com.training</groupId>
+    <artifactId>kafka</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>kafka</name>
+    <description>Sample project for Apache Kafka training</description>
 
-	<properties>
+    <properties>
 
-		<java.version>17</java.version>
-		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<maven.compiler.source>${java.version}</maven.compiler.source>
+        <java.version>17</java.version>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
 
-		<lombok.version>1.18.24</lombok.version>
-		<junit.version>5.8.2</junit.version>
-		<kafka.client.version>3.2.0</kafka.client.version>
-		<logback.version>1.2.11</logback.version>
-		<gson.version>2.9.0</gson.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-	</properties>
+        <lombok.version>1.18.24</lombok.version>
+        <junit.version>5.8.2</junit.version>
+        <kafka.client.version>3.2.0</kafka.client.version>
+        <logback.version>1.2.11</logback.version>
+        <gson.version>2.9.0</gson.version>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<version>${lombok.version}</version>
-		</dependency>
+    </properties>
 
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter-engine</artifactId>
-			<version>${junit.version}</version>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>org.apache.kafka</groupId>
-			<artifactId>kafka-clients</artifactId>
-			<version>${kafka.client.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>${logback.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.client.version}</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>${gson.version}</version>
-		</dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
 
 
+    </dependencies>
 
-	</dependencies>
+    <build>
+        <plugins>
 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.22.2</version>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>
