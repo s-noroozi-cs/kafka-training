@@ -57,6 +57,6 @@ public class BatchSingleTests {
         producer.send(record);
         producer.send(record);
 
-        Assertions.assertEquals(0,consumeAllRecords(topicName).count());
+        Assertions.assertEquals(2,consumeAllRecords(topicName).count());
     }
 }
