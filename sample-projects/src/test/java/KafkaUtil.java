@@ -20,6 +20,7 @@ public class KafkaUtil {
     public static String KAFKA_CONFIG_AUTO_OFFSET_RESET = "auto.offset.reset";
     public static String KAFKA_CONFIG_ACK = "acks";
     public static String KAFKA_CONFIG_LINGER_MS = "linger.ms";
+    public static String KAFKA_CONFIG_BATCH_SIZE = "batch.size";
     public static String KAFKA_PARTITIONER_CLASS = "partitioner.class";
 
     public static String OFFSET_RESET_LATEST = "latest";
