@@ -1,3 +1,13 @@
+
+./kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic order-1
+
+./kafka-console-producer.sh --bootstrap-server localhost:9092 --topic order-1
+
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic order-1 --from-beginning
+
+
+
+
 docker vs process
 
 novel netware-uptime
@@ -323,8 +333,3 @@ test add and remove at runtime
 
 add entry to container host file
 docker run --> --add-host=kafka:192.168.163.63
-
-
---- secure zookeeper
-D:\svn-repository\InstantPayment\trunk\zookeeper-x509-auth-npsd
-http://192.168.163.230:9090/xwiki/bin/view/Menu/R%26D/Zookeeper%20Secure%20Configuration
