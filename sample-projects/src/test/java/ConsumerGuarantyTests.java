@@ -2,17 +2,15 @@ import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
 import java.util.Arrays;
-import java.util.Optional;
-import java.util.OptionalLong;
+import java.util.Map;
 import java.util.stream.IntStream;
 
-public class ConsumerOffsetTests {
+public class ConsumerGuarantyTests {
 
     private void produce_10_records(String topicName){
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
@@ -23,19 +21,10 @@ public class ConsumerOffsetTests {
     }
 
     @Test
-    void check_consumer_offset(){
-        String topicName = Util.getRandomTopicName();
-        produce_10_records(topicName);
-
+    void check_default_consumer_isolation_level(){
         KafkaConsumer consumer = new KafkaConsumer(KafkaUtil.getDefaultConsumerConfig());
-        OptionalLong currentLag = consumer.currentLag(new TopicPartition(topicName,0));
-        Assertions.assertEquals(10,currentLag.getAsLong());
-
-        consumer.subscribe(Arrays.asList(topicName));
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(300));
-        consumer.unsubscribe();
-        consumer.close();
-
+        System.out.printf("ok");
+        consumer.metrics();
 
     }
 }

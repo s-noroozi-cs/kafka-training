@@ -18,6 +18,7 @@ public class KafkaUtil {
     public static String KAFKA_CONFIG_KEY_DESERIALIZER = "key.deserializer";
     public static String KAFKA_CONFIG_VALUE_DESERIALIZER = "value.deserializer";
     public static String KAFKA_CONFIG_AUTO_OFFSET_RESET = "auto.offset.reset";
+    public static String KAFKA_CONFIG_ISOLATION_LEVEL = "isolation.level";
     public static String KAFKA_CONFIG_ACK = "acks";
     public static String KAFKA_CONFIG_LINGER_MS = "linger.ms";
     public static String KAFKA_CONFIG_BATCH_SIZE = "batch.size";
@@ -25,6 +26,9 @@ public class KafkaUtil {
 
     public static String OFFSET_RESET_LATEST = "latest";
     public static String OFFSET_RESET_EARLIEST = "earliest";
+    public static String ISOLATION_LEVEL_READ_COMMITTED = "read_committed";
+    public static String ISOLATION_LEVEL_READ_UNCOMMITTED = "read_uncommitted";
+
 
     private static String BOOTSTRAP_SERVER = "localhost:9092";
 
