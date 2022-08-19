@@ -23,6 +23,8 @@ public class KafkaUtil {
     public static String KAFKA_CONFIG_LINGER_MS = "linger.ms";
     public static String KAFKA_CONFIG_BATCH_SIZE = "batch.size";
     public static String KAFKA_PARTITIONER_CLASS = "partitioner.class";
+    public static String KAFKA_AUTO_COMMIT = "enable.auto.commit";
+
 
     public static String OFFSET_RESET_LATEST = "latest";
     public static String OFFSET_RESET_EARLIEST = "earliest";
