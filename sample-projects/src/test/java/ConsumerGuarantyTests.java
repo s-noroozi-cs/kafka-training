@@ -14,102 +14,114 @@ import java.util.stream.IntStream;
 
 public class ConsumerGuarantyTests {
 
-    private void produce_10_records(String topicName){
+    private void produce_10_records(String topicName) {
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
         IntStream.range(0, 10)
-                .mapToObj(i -> new ProducerRecord(topicName,String.valueOf(i)))
+                .mapToObj(i -> new ProducerRecord(topicName, String.valueOf(i)))
                 .forEach(producer::send);
         producer.close();
     }
 
-    private KafkaConsumer getConsumer(String topic,String ... cfgPairs){
+    private KafkaConsumer getConsumer(String topic, String... cfgPairs) {
         Map config = KafkaUtil.getDefaultConsumerConfig();
-        for(int i=0; i<cfgPairs.length; i+=2){
-            config.put(cfgPairs[i],cfgPairs[i+1]);
+        for (int i = 0; i < cfgPairs.length; i += 2) {
+            config.put(cfgPairs[i], cfgPairs[i + 1]);
         }
         KafkaConsumer consumer = new KafkaConsumer(config);
         consumer.subscribe(List.of(topic));
         return consumer;
     }
 
-    private long getBeginOffset(KafkaConsumer consumer,TopicPartition tp){
-        return  ((Map<TopicPartition, Long>)consumer.beginningOffsets(List.of(tp))).get(tp);
+    private long getBeginOffset(KafkaConsumer consumer, TopicPartition tp) {
+        return ((Map<TopicPartition, Long>) consumer.beginningOffsets(List.of(tp))).get(tp);
     }
 
-    private long getEndOffset(KafkaConsumer consumer,TopicPartition tp){
-        return  ((Map<TopicPartition, Long>)consumer.endOffsets(List.of(tp))).get(tp);
+    private long getEndOffset(KafkaConsumer consumer, TopicPartition tp) {
+        return ((Map<TopicPartition, Long>) consumer.endOffsets(List.of(tp))).get(tp);
     }
 
 
     @Test
-    void check_consumer_begin_end_offset(){
+    void check_consumer_begin_end_offset() {
         String topic = Util.getRandomTopicName();
-        TopicPartition tp = new TopicPartition(topic,0);
+        TopicPartition tp = new TopicPartition(topic, 0);
 
         produce_10_records(topic);
         KafkaConsumer consumer = getConsumer(topic,
-                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST);
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST);
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(10,records.count());
+        Assertions.assertEquals(10, records.count());
 
         records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(0,records.count());
-        Assertions.assertEquals(0L,consumer.currentLag(tp).getAsLong());
+        Assertions.assertEquals(0, records.count());
+        Assertions.assertEquals(0L, consumer.currentLag(tp).getAsLong());
 
-        Assertions.assertEquals(0,getBeginOffset(consumer,tp));
-        Assertions.assertEquals(10,getEndOffset(consumer,tp));
+        Assertions.assertEquals(0, getBeginOffset(consumer, tp));
+        Assertions.assertEquals(10, getEndOffset(consumer, tp));
     }
 
 
-
     @Test
-    void check_consumer_manual_commit(){
+    void check_consumer_manual_commit() {
         String topic = Util.getRandomTopicName();
-        TopicPartition tp = new TopicPartition(topic,0);
+        TopicPartition tp = new TopicPartition(topic, 0);
 
         produce_10_records(topic);
         KafkaConsumer consumer = getConsumer(topic,
-                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST,
-                KafkaUtil.KAFKA_AUTO_COMMIT,"false");
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST,
+                KafkaUtil.KAFKA_AUTO_COMMIT, "false");
+
+        String consumerGroupId = consumer.groupMetadata().groupId();
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(10,records.count());
+        Assertions.assertEquals(10, records.count());
 
-        Assertions.assertEquals(0,getBeginOffset(consumer,tp));
-        Assertions.assertEquals(10,getEndOffset(consumer,tp));
+        Assertions.assertEquals(0, getBeginOffset(consumer, tp));
+        Assertions.assertEquals(10, getEndOffset(consumer, tp));
 
         produce_10_records(topic);
         records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(10,records.count());
+        Assertions.assertEquals(10, records.count());
 
-        Assertions.assertEquals(0,getBeginOffset(consumer,tp));
-        Assertions.assertEquals(20,getEndOffset(consumer,tp));
+        Assertions.assertEquals(0, getBeginOffset(consumer, tp));
+        Assertions.assertEquals(20, getEndOffset(consumer, tp));
 
+        consumer.unsubscribe();
+        consumer.close();
+
+        consumer = getConsumer(topic,
+                KafkaUtil.KAFKA_CONFIG_GROUP_ID,consumerGroupId,
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST,
+                KafkaUtil.KAFKA_AUTO_COMMIT, "false");
+
+        records = consumer.poll(Duration.ofMillis(300));
+        Assertions.assertEquals(20, records.count());
     }
 
     @Test
-    void check_consumer_manual_commit_with_isolation_level(){
+    void check_consumer_manual_commit_with_isolation_level() {
         String topic = Util.getRandomTopicName();
-        TopicPartition tp = new TopicPartition(topic,0);
+        TopicPartition tp = new TopicPartition(topic, 0);
 
         produce_10_records(topic);
         KafkaConsumer consumer = getConsumer(topic,
-                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST,
-                KafkaUtil.KAFKA_AUTO_COMMIT,"false");
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST,
+                KafkaUtil.KAFKA_AUTO_COMMIT, "false",
+                KafkaUtil.KAFKA_CONFIG_ISOLATION_LEVEL, KafkaUtil.ISOLATION_LEVEL_READ_COMMITTED);
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(10,records.count());
+        Assertions.assertEquals(10, records.count());
 
-        Assertions.assertEquals(0,getBeginOffset(consumer,tp));
-        Assertions.assertEquals(10,getEndOffset(consumer,tp));
+        Assertions.assertEquals(0, getBeginOffset(consumer, tp));
+        Assertions.assertEquals(10, getEndOffset(consumer, tp));
 
         produce_10_records(topic);
         records = consumer.poll(Duration.ofMillis(300));
-        Assertions.assertEquals(10,records.count());
+        Assertions.assertEquals(10, records.count());
 
-        Assertions.assertEquals(0,getBeginOffset(consumer,tp));
-        Assertions.assertEquals(20,getEndOffset(consumer,tp));
+        Assertions.assertEquals(0, getBeginOffset(consumer, tp));
+        Assertions.assertEquals(10, getEndOffset(consumer, tp));
 
     }
 }
