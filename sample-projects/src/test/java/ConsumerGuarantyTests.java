@@ -22,9 +22,11 @@ public class ConsumerGuarantyTests {
         producer.close();
     }
 
-    private KafkaConsumer getConsumerWithEarliestConfig(String topic){
+    private KafkaConsumer getConsumer(String topic,String ... cfgPairs){
         Map config = KafkaUtil.getDefaultConsumerConfig();
-        config.put(KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST);
+        for(int i=0; i<cfgPairs.length; i+=2){
+            config.put(cfgPairs[i],cfgPairs[i+1]);
+        }
         KafkaConsumer consumer = new KafkaConsumer(config);
         consumer.subscribe(List.of(topic));
         return consumer;
@@ -32,12 +34,13 @@ public class ConsumerGuarantyTests {
 
 
     @Test
-    void check_default_consumer_begin_end_offset(){
+    void check_consumer_begin_end_offset(){
         String topic = Util.getRandomTopicName();
         TopicPartition tp = new TopicPartition(topic,0);
 
         produce_10_records(topic);
-        KafkaConsumer consumer = getConsumerWithEarliestConfig(topic);
+        KafkaConsumer consumer = getConsumer(topic,
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST);
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(300));
         Assertions.assertEquals(10,records.count());
@@ -50,5 +53,18 @@ public class ConsumerGuarantyTests {
 
         Assertions.assertEquals(0,beginOffset);
         Assertions.assertEquals(10,endOffset);
+    }
+
+    @Test
+    void check_consumer_manual_commit(){
+        String topic = Util.getRandomTopicName();
+
+        produce_10_records(topic);
+        KafkaConsumer consumer = getConsumer(topic,
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST,
+                KAf);
+
+
+
     }
 }
