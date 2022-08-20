@@ -104,4 +104,25 @@ public class ConsumerGuarantyTests {
         records = consumer.poll(Duration.ofMillis(300));
         Assertions.assertEquals(commitData ? 0 : 20, records.count());
     }
+
+    @Test
+    void check_isolation_level(){
+        String topic = Util.getRandomTopicName();
+        KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
+
+        KafkaConsumer consumer = getConsumer(topic,
+                KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST);
+
+        producer.initTransactions();
+        producer.beginTransaction();
+        producer.send(new ProducerRecord(topic,"A"));
+        producer.commitTransaction();
+
+        ConsumerRecords records = consumer.poll(Duration.ofMillis(400));
+        Assertions.assertEquals(1,records.count());
+
+
+
+//        producer.abortTransaction();
+    }
 }
