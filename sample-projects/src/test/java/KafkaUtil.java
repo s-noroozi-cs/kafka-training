@@ -56,7 +56,7 @@ public class KafkaUtil {
         return consumer;
     }
 
-    static Map<String, String> getDefaultConsumerConfig() {
+    static Map<String, String> getDefaultConsumerConfig(String... cfgPairs) {
         Map<String, String> config = new HashMap<>();
         config.put(KAFKA_CONFIG_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
         config.put(KAFKA_CONFIG_GROUP_ID, Util.getRandomConsumerGroupId());
@@ -66,6 +66,9 @@ public class KafkaUtil {
         config.put(KAFKA_CONFIG_VALUE_DESERIALIZER,
                 "org.apache.kafka.common.serialization.StringDeserializer");
         config.put(KAFKA_CONFIG_AUTO_OFFSET_RESET, OFFSET_RESET_LATEST);
+        for (int i = 0; i < cfgPairs.length; i += 2) {
+            config.put(cfgPairs[i], cfgPairs[i + 1]);
+        }
         return config;
     }
 
