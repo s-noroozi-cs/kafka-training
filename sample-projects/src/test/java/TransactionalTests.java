@@ -55,8 +55,6 @@ public class TransactionalTests {
 
         records = consumer.poll(Duration.ofMillis(400));
         Assertions.assertEquals(1, records.count());
-
-
-
+        
     }
 }
