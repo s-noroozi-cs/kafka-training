@@ -41,7 +41,7 @@ public class KafkaUtil {
         return config;
     }
 
-    KafkaConsumer getConsumer(String topic, String... cfgPairs) {
+    static KafkaConsumer getConsumer(String topic, String... cfgPairs) {
         Map config = KafkaUtil.getDefaultConsumerConfig();
         for (int i = 0; i < cfgPairs.length; i += 2) {
             config.put(cfgPairs[i], cfgPairs[i + 1]);
@@ -50,7 +50,7 @@ public class KafkaUtil {
         consumer.subscribe(List.of(topic));
         return consumer;
     }
-    
+
     static Map<String, String> getDefaultConsumerConfig() {
         Map<String, String> config = new HashMap<>();
         config.put(KAFKA_CONFIG_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
