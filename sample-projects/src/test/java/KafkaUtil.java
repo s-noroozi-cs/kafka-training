@@ -32,12 +32,17 @@ public class KafkaUtil {
 
     private static String BOOTSTRAP_SERVER = "localhost:9092";
 
-    static Map<String, String> getDefaultProducerConfig() {
+    static Map<String, String> getDefaultProducerConfig(String... customCfg) {
         Map<String, String> config = new HashMap<>();
         config.put(KAFKA_CONFIG_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
         config.put(KAFKA_CONFIG_KEY_SERIALIZER, "org.apache.kafka.common.serialization.StringSerializer");
         config.put(KAFKA_CONFIG_VALUE_SERIALIZER, "org.apache.kafka.common.serialization.StringSerializer");
         config.put(KAFKA_CONFIG_ACK, "all");
+
+        for (int i = 0; i < customCfg.length; i += 2) {
+            config.put(customCfg[i], customCfg[i + 1]);
+        }
+
         return config;
     }
 
