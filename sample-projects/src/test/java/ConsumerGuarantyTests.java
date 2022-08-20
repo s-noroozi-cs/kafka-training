@@ -21,16 +21,6 @@ public class ConsumerGuarantyTests {
         producer.close();
     }
 
-    private KafkaConsumer getConsumer(String topic, String... cfgPairs) {
-        Map config = KafkaUtil.getDefaultConsumerConfig();
-        for (int i = 0; i < cfgPairs.length; i += 2) {
-            config.put(cfgPairs[i], cfgPairs[i + 1]);
-        }
-        KafkaConsumer consumer = new KafkaConsumer(config);
-        consumer.subscribe(List.of(topic));
-        return consumer;
-    }
-
     private long getBeginOffset(KafkaConsumer consumer, TopicPartition tp) {
         return ((Map<TopicPartition, Long>) consumer.beginningOffsets(List.of(tp))).get(tp);
     }
@@ -45,7 +35,7 @@ public class ConsumerGuarantyTests {
         TopicPartition tp = new TopicPartition(topic, 0);
 
         produce_10_records(topic);
-        KafkaConsumer consumer = getConsumer(topic,
+        KafkaConsumer consumer = KafkaUtil.getConsumer(topic,
                 KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST);
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(300));
@@ -71,7 +61,7 @@ public class ConsumerGuarantyTests {
         TopicPartition tp = new TopicPartition(topic, 0);
 
         produce_10_records(topic);
-        KafkaConsumer consumer = getConsumer(topic,
+        KafkaConsumer consumer = KafkaUtil.getConsumer(topic,
                 KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST,
                 KafkaUtil.KAFKA_AUTO_COMMIT, "false");
 
@@ -96,7 +86,7 @@ public class ConsumerGuarantyTests {
         consumer.unsubscribe();
         consumer.close();
 
-        consumer = getConsumer(topic,
+        consumer = KafkaUtil.getConsumer(topic,
                 KafkaUtil.KAFKA_CONFIG_GROUP_ID, consumerGroupId,
                 KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST,
                 KafkaUtil.KAFKA_AUTO_COMMIT, "false");
@@ -110,7 +100,7 @@ public class ConsumerGuarantyTests {
         String topic = Util.getRandomTopicName();
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
 
-        KafkaConsumer consumer = getConsumer(topic,
+        KafkaConsumer consumer = KafkaUtil.getConsumer(topic,
                 KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET,KafkaUtil.OFFSET_RESET_EARLIEST);
 
         producer.initTransactions();
