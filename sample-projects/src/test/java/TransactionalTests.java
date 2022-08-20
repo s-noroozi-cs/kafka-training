@@ -55,6 +55,22 @@ public class TransactionalTests {
 
         records = consumer.poll(Duration.ofMillis(400));
         Assertions.assertEquals(1, records.count());
-        
+
+    }
+
+    @Test
+    void test_exactly_once_processing(){
+        String inputTopic = Util.getRandomTopicName();
+        String outputTopic = Util.getRandomTopicName();
+
+
+        //exactly once at producer side
+        KafkaProducer producer = new KafkaProducer(
+                KafkaUtil.getDefaultProducerConfig(
+                        ProducerConfig.TRANSACTIONAL_ID_CONFIG,Util.getRandomProducerTrxCfg(),
+                        ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,"true"));
+
+        KafkaConsumer consumer = new KafkaConsumer(KafkaUtil.getDefaultConsumerConfig())
+
     }
 }
