@@ -2,12 +2,10 @@ import org.apache.kafka.clients.admin.Admin;
 import org.apache.kafka.clients.admin.AdminClientConfig;
 import org.apache.kafka.clients.admin.CreateTopicsResult;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.KafkaFuture;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 
 public class KafkaUtil {
     public static String KAFKA_CONFIG_BOOTSTRAP_SERVERS = "bootstrap.servers";
@@ -34,7 +32,7 @@ public class KafkaUtil {
 
     private static String BOOTSTRAP_SERVER = "localhost:9092";
 
-    protected static Map<String, String> getDefaultProducerConfig() {
+    static Map<String, String> getDefaultProducerConfig() {
         Map<String, String> config = new HashMap<>();
         config.put(KAFKA_CONFIG_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
         config.put(KAFKA_CONFIG_KEY_SERIALIZER, "org.apache.kafka.common.serialization.StringSerializer");
@@ -43,7 +41,17 @@ public class KafkaUtil {
         return config;
     }
 
-    protected static Map<String, String> getDefaultConsumerConfig() {
+    KafkaConsumer getConsumer(String topic, String... cfgPairs) {
+        Map config = KafkaUtil.getDefaultConsumerConfig();
+        for (int i = 0; i < cfgPairs.length; i += 2) {
+            config.put(cfgPairs[i], cfgPairs[i + 1]);
+        }
+        KafkaConsumer consumer = new KafkaConsumer(config);
+        consumer.subscribe(List.of(topic));
+        return consumer;
+    }
+    
+    static Map<String, String> getDefaultConsumerConfig() {
         Map<String, String> config = new HashMap<>();
         config.put(KAFKA_CONFIG_BOOTSTRAP_SERVERS, BOOTSTRAP_SERVER);
         config.put(KAFKA_CONFIG_GROUP_ID, Util.getRandomConsumerGroupId());
@@ -62,7 +70,7 @@ public class KafkaUtil {
         return Admin.create(properties);
     }
 
-    public static void createTopic(String topicName, int partitions) {
+    static void createTopic(String topicName, int partitions) {
         try (Admin admin = createAdminClient()) {
             short replicationFactor = 1;
             NewTopic newTopic = new NewTopic(topicName, partitions, replicationFactor);
