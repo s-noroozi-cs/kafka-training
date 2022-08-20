@@ -114,10 +114,7 @@ public class ConsumerGuarantyTests {
         ConsumerRecords records = consumer.poll(Duration.ofMillis(400));
         Assertions.assertEquals(1, records.count());
 
-        if (System.currentTimeMillis() % 2 == 0)
-            producer.abortTransaction();
-        else
-            producer.commitTransaction();
+        producer.abortTransaction();
     }
 
     @Test
@@ -137,10 +134,16 @@ public class ConsumerGuarantyTests {
 
         ConsumerRecords records = consumer.poll(Duration.ofMillis(400));
         Assertions.assertEquals(0, records.count());
+        producer.commitTransaction();
 
-        if (System.currentTimeMillis() % 2 == 0)
-            producer.abortTransaction();
-        else
-            producer.commitTransaction();
+        producer.beginTransaction();
+        producer.send(new ProducerRecord(topic, "A"));
+        producer.commitTransaction();
+
+        records = consumer.poll(Duration.ofMillis(400));
+        Assertions.assertEquals(1, records.count());
+
+
+
     }
 }
