@@ -1,14 +1,17 @@
-import org.apache.kafka.clients.consumer.ConsumerConfig;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.IsolationLevel;
+import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class TransactionalTests {
     @Test
@@ -59,18 +62,60 @@ public class TransactionalTests {
     }
 
     @Test
-    void test_exactly_once_processing(){
+    void test_exactly_once_processing() {
         String inputTopic = Util.getRandomTopicName();
         String outputTopic = Util.getRandomTopicName();
 
+        String inputConsumerGroup = Util.getRandomConsumerGroupId();
+        String outputConsumerGroup = Util.getRandomConsumerGroupId();
+
+        String inputData = "request data";
+        String processKeyword = " --> processed";
+        String outputData = inputData.concat(processKeyword);
 
         //exactly once at producer side
         KafkaProducer producer = new KafkaProducer(
                 KafkaUtil.getDefaultProducerConfig(
-                        ProducerConfig.TRANSACTIONAL_ID_CONFIG,Util.getRandomProducerTrxCfg(),
-                        ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG,"true"));
+                        ProducerConfig.TRANSACTIONAL_ID_CONFIG, Util.getRandomProducerTrxCfg(),
+                        ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, "true"));
+        producer.initTransactions();
+        producer.beginTransaction();
+        producer.send(new ProducerRecord<>(inputTopic, "request data"));
+        producer.commitTransaction();
 
-        KafkaConsumer consumer = new KafkaConsumer(KafkaUtil.getDefaultConsumerConfig())
+        //exactly once at consumer side
+        KafkaConsumer consumer = new KafkaConsumer(
+                KafkaUtil.getDefaultConsumerConfig(ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG, "false",
+                        ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, KafkaUtil.OFFSET_RESET_EARLIEST,
+                        ConsumerConfig.GROUP_ID_CONFIG, inputConsumerGroup,
+                        ConsumerConfig.ISOLATION_LEVEL_CONFIG, IsolationLevel.READ_COMMITTED.name().toLowerCase()));
+        consumer.subscribe(List.of(inputTopic));
+        ConsumerRecords records = consumer.poll(Duration.ofMillis(400));
+        Assertions.assertEquals(1, records.count());
+        ConsumerRecord record = (ConsumerRecord) records.records(new TopicPartition(inputTopic, 0)).get(0);
+        Assertions.assertEquals(inputData, record.value());
 
+        producer.beginTransaction();
+        producer.send(new ProducerRecord(outputTopic, record.value() + processKeyword));
+
+        Map<TopicPartition, OffsetAndMetadata> offsetsToCommit = new HashMap<>();
+        for (TopicPartition partition : (Set<TopicPartition>) records.partitions()) {
+            List<ConsumerRecord<String, String>> partitionedRecords = records.records(partition);
+            long offset = partitionedRecords.get(partitionedRecords.size() - 1).offset();
+            offsetsToCommit.put(partition, new OffsetAndMetadata(offset + 1));
+        }
+
+        producer.sendOffsetsToTransaction(offsetsToCommit, consumer.groupMetadata());
+        producer.commitTransaction();
+
+        records = consumer.poll(Duration.ofMillis(400));
+        Assertions.assertEquals(0,records.count());
+
+        consumer.subscribe(List.of(outputTopic));
+        records = consumer.poll(Duration.ofMillis(400));
+        Assertions.assertEquals(1,records.count());
+
+        record = (ConsumerRecord) records.records(new TopicPartition(outputTopic, 0)).get(0);
+        Assertions.assertEquals(outputData, record.value());
     }
 }
