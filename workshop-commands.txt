@@ -6,6 +6,8 @@
 ./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic order-1 --from-beginning
 
 
+https://github.com/seglo/kafka-lag-exporter#run-as-java-app
+
 
 
 docker vs process
