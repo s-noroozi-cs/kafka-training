@@ -8,6 +8,11 @@
 
 https://github.com/seglo/kafka-lag-exporter#run-as-java-app
 
+--> standalone
+./kafka-lag-exporter \
+	-Dconfig.file=/path/to/the/application.conf \
+	-Dlogback.configurationFile=/path/to/the/logback.xml
+
 
 
 docker vs process
