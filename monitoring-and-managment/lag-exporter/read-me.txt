@@ -1,1 +1,16 @@
-https://github.com/seglo/kafka-lag-exporter
+0. start your kafka cluster 
+
+1. docker pull seglo/kafka-lag-exporter:0.7.0
+
+2. docker run -it -p 8000:8000 --rm \
+              -v $(pwd):/opt/docker/conf \
+              seglo/kafka-lag-exporter:0.7.0 \
+                 /opt/docker/bin/kafka-lag-exporter \
+                     -Dconfig.file=/opt/docker/conf/application.conf \
+                     -Dlogback.configurationFile=/opt/docker/conf/logback.xml
+3. 
+
+
+references:
+
+	https://github.com/seglo/kafka-lag-exporter
