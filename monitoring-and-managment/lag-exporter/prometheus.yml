@@ -1,0 +1,11 @@
+scrape_configs:
+  # Make Prometheus scrape itself for metrics.
+  - job_name: "prometheus"
+    static_configs:
+      - targets: ["localhost:9090"]
+
+  # Discover Lag Explorer services to scrape.
+  - job_name: 'lag_explorer'
+    lag_explorer_configs:
+      - server: 'http://lag_explorer:8000'
+    
