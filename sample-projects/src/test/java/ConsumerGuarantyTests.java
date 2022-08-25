@@ -1,10 +1,7 @@
-import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.common.IsolationLevel;
 import org.apache.kafka.common.TopicPartition;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -47,6 +44,7 @@ public class ConsumerGuarantyTests {
         Assertions.assertEquals(0, getBeginOffset(consumer, tp));
         Assertions.assertEquals(10, getEndOffset(consumer, tp));
 
+
         records = consumer.poll(Duration.ofMillis(300));
         Assertions.assertEquals(0, records.count());
         Assertions.assertEquals(0L, consumer.currentLag(tp).getAsLong());
@@ -58,7 +56,7 @@ public class ConsumerGuarantyTests {
 
     @Test
     void check_consumer_manual_commit() {
-        boolean commitData = true;
+        boolean commitData = false;
 
         String topic = Util.getRandomTopicName();
         TopicPartition tp = new TopicPartition(topic, 0);
@@ -97,5 +95,4 @@ public class ConsumerGuarantyTests {
         records = consumer.poll(Duration.ofMillis(300));
         Assertions.assertEquals(commitData ? 0 : 20, records.count());
     }
-
 }
