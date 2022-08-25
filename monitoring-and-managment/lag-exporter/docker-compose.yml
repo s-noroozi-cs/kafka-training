@@ -19,4 +19,17 @@ services:
       - 9092:9092
     depends_on:
       - zookeeper
-    
+
+  lag_explorer:
+    image: seglo/kafka-lag-exporter:0.7.0
+    container_name:
+      lag_explorer
+    ports:
+      - 8000:8000
+    volumes:
+      - ./:/opt/docker/conf
+    command: /opt/docker/bin/kafka-lag-exporter -Dconfig.file=/opt/docker/conf/application.conf -Dlogback.configurationFile=/opt/docker/conf/logback.xml
+    depends_on:
+      - zookeeper
+      - kafka
+
