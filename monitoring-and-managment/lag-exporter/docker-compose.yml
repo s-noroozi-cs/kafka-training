@@ -22,8 +22,7 @@ services:
 
   lag_explorer:
     image: seglo/kafka-lag-exporter:0.7.0
-    container_name:
-      lag_explorer
+    container_name: lag_explorer
 #    ports:
 #      - 8000:8000
     volumes:
@@ -37,6 +36,16 @@ services:
     image: prom/prometheus:v2.38.0
     container_name: prometheus
     volumes:
-      - ./:/etc/prometheus
-    
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - lag_explorer
 
+  grafana:
+    image: grafana/grafana:9.1.1
+    container_name: grafana
+    volumes:
+      - ./prometheus_ds.yml:/etc/grafana/provisioning/datasources/prometheus_ds.yml
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus

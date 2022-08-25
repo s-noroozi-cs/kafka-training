@@ -5,7 +5,7 @@ scrape_configs:
       - targets: ["localhost:9090"]
 
   # Discover Lag Explorer services to scrape.
-  - job_name: 'lag_explorer'
-    lag_explorer_configs:
-      - server: 'http://lag_explorer:8000'
+  - job_name: "lag_explorer"
+    static_configs:
+      - targets: ["lagexplorer:8000"]
     
