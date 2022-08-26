@@ -7,5 +7,5 @@ scrape_configs:
   # Discover Lag Explorer services to scrape.
   - job_name: "lag_explorer"
     static_configs:
-      - targets: ["lagexplorer:8000"]
+      - targets: ["lag_explorer:8000"]
     
