@@ -6,7 +6,10 @@ Using prometheus to monitor java application
 			using rmi protocol
 		2- jvm in-process launch
 			using java-agent 
+
 	
+
 
 Reference
 	https://intl.cloud.tencent.com/document/product/457/38367
+	https://github.com/prometheus/jmx_exporter
