@@ -17,8 +17,6 @@ services:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
        - KAFKA_LISTENERS=plaintext://:9092
        - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka:9092
-       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099
-       - JMX_PORT=1099
     ports:
       - 9092:9092
     depends_on:
