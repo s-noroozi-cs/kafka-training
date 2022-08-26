@@ -1,0 +1,12 @@
+Using prometheus to monitor java application
+
+	JMX
+
+		1- independent process launch
+			using rmi protocol
+		2- jvm in-process launch
+			using java-agent 
+	
+
+Reference
+	https://intl.cloud.tencent.com/document/product/457/38367
