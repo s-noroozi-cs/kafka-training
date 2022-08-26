@@ -1,3 +1,8 @@
+global:
+  scrape_interval:     15s 
+  evaluation_interval: 20s 
+  scrape_timeout: 10s
+
 scrape_configs:
   # Make Prometheus scrape itself for metrics.
   - job_name: "prometheus"
