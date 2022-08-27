@@ -8,7 +8,25 @@ Using prometheus to monitor java application
 			using java-agent 
 
 	1. docker-compose up
-	2. 
+	2. open localhost:3000
+	3. import dashboard.json
+	4. kafka manipulation 
+		
+		create topic
+
+			./kafka-topics.sh --bootstrap-server kafka:9092 --create --topic replicated-topic --partitions 3 --replication-factor 1 
+    
+		start producer 
+			./kafka-producer-perf-test.sh --topic replicated-topic --num-records 10000000 --record-size 10 \
+	      		--throughput 1000 --producer-props bootstrap.servers=kafka:9092
+
+		start consumers
+	
+			./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
+				--consumer-property client.id=test-client-id-1 \
+				--consumer-property enable.auto.commit=true \
+				--topic replicated-topic --bootstrap-server kafka:9092
+
 
 
 Reference
