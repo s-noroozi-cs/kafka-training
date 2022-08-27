@@ -1,0 +1,51 @@
+version: '3'
+
+services:
+
+  zookeeper:
+    image: zookeeper:3.7.0
+    restart: always
+    container_name: zookeeper
+    ports:
+      - 2181:2181
+      
+  kafka:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka:9092
+       - EXTRA_ARGS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar=8080:/opt/kafka/libs/prometheus-jmx-config.yaml
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099
+
+    volumes:
+      - ./jmx_prometheus_javaagent-0.17.0.jar:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar
+      - ./prometheus-jmx-config.yaml:/opt/kafka/libs/prometheus-jmx-config.yaml
+    ports:
+      - 9092:9092
+    depends_on:
+      - zookeeper
+
+  prometheus:
+    image: prom/prometheus:v2.38.0
+    container_name: prometheus
+    restart: always
+    ports:
+      - 9090:9090
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - kafka
+
+  grafana:
+    image: grafana/grafana:9.1.1
+    container_name: grafana
+    restart: always
+    volumes:
+      - ./prometheus_ds.yml:/etc/grafana/provisioning/datasources/prometheus_ds.yml
+    ports:
+      - 3000:3000
+    depends_on:
+      - prometheus

@@ -7,9 +7,11 @@ Using prometheus to monitor java application
 		2- jvm in-process launch
 			using java-agent 
 
-	
+	1. docker-compose up
+	2. 
 
 
 Reference
+	https://www.openlogic.com/blog/prometheus-java-monitoring-and-gathering-data
 	https://intl.cloud.tencent.com/document/product/457/38367
 	https://github.com/prometheus/jmx_exporter

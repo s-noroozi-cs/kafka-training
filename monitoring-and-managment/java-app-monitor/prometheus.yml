@@ -1,0 +1,7 @@
+global:
+  scrape_interval:     5s
+
+scrape_configs:
+  - job_name: 'kafka_jmx'
+    static_configs:
+      - targets: [kafka:8080]
