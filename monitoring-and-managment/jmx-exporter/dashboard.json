@@ -774,7 +774,7 @@
             "mode": "thresholds"
           },
           "custom": {},
-          "displayName": "Messages In - Rate",
+          "displayName": "Messages Per Sec - Rate",
           "mappings": [],
           "noValue": "0",
           "thresholds": {
@@ -1019,7 +1019,7 @@
             "mode": "thresholds"
           },
           "custom": {},
-          "displayName": "Total Messages In - Sum",
+          "displayName": "Total Messages Per Sec - Sum",
           "mappings": [],
           "noValue": "0",
           "thresholds": {
