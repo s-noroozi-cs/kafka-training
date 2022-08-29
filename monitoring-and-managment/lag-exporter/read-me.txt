@@ -10,7 +10,7 @@ create topic
     
 start producer 
 	./kafka-producer-perf-test.sh --topic replicated-topic --num-records 10000000 --record-size 10 \
-	      --throughput 1000 --producer-props bootstrap.servers=kafka:9092
+	      --throughput 10 --producer-props bootstrap.servers=kafka:9092
 
 start consumers
 	
