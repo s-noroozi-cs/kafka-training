@@ -9,14 +9,14 @@ services:
     ports:
       - 2181:2181
       
-  kafka:
+  kafka_1:
     image: wurstmeister/kafka:2.13-2.8.1
-    container_name: kafka
+    container_name: kafka_1
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
        - KAFKA_LISTENERS=plaintext://:9092
-       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092
        - EXTRA_ARGS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar=8080:/opt/kafka/libs/prometheus-jmx-config.yaml
        - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099
 
@@ -28,6 +28,45 @@ services:
     depends_on:
       - zookeeper
 
+  kafka_2:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka_2
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9093
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_2:9093
+       - EXTRA_ARGS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar=8080:/opt/kafka/libs/prometheus-jmx-config.yaml
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099
+
+    volumes:
+      - ./jmx_prometheus_javaagent-0.17.0.jar:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar
+      - ./prometheus-jmx-config.yaml:/opt/kafka/libs/prometheus-jmx-config.yaml
+    ports:
+      - 9093:9093
+    depends_on:
+      - zookeeper
+
+  kafka_3:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka_3
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9094
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_3:9094
+       - EXTRA_ARGS=-javaagent:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar=8080:/opt/kafka/libs/prometheus-jmx-config.yaml
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.rmi.port=1099
+
+    volumes:
+      - ./jmx_prometheus_javaagent-0.17.0.jar:/opt/kafka/libs/jmx_prometheus_javaagent-0.17.0.jar
+      - ./prometheus-jmx-config.yaml:/opt/kafka/libs/prometheus-jmx-config.yaml
+    ports:
+      - 9094:9094
+    depends_on:
+      - zookeeper
+
+
   prometheus:
     image: prom/prometheus:v2.38.0
     container_name: prometheus
@@ -37,7 +76,9 @@ services:
     volumes:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml
     depends_on:
-      - kafka
+      - kafka_1
+      - kafka_2
+      - kafka_3
 
   grafana:
     image: grafana/grafana:9.1.1
