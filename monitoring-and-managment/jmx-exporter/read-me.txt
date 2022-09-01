@@ -14,7 +14,7 @@ Using prometheus to monitor java application
 		
 		create topic
 
-			./kafka-topics.sh --bootstrap-server kafka:9092 --create --topic replicated-topic --partitions 3 --replication-factor 1 
+			./kafka-topics.sh --bootstrap-server kafka:9092 --create --topic replicated-topic --partitions 3 --replication-factor 3 
     
 		start producer 
 			./kafka-producer-perf-test.sh --topic replicated-topic --num-records 10000000 --record-size 10 \
