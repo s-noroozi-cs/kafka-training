@@ -6,12 +6,14 @@ services:
     image: zookeeper:3.7.0
     restart: always
     container_name: zookeeper
+    platform: linux/amd64
     ports:
       - 2181:2181
       
   kafka_1:
     image: wurstmeister/kafka:2.13-2.8.1
     container_name: kafka_1
+    platform: linux/amd64
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -31,6 +33,7 @@ services:
   kafka_2:
     image: wurstmeister/kafka:2.13-2.8.1
     container_name: kafka_2
+    platform: linux/amd64
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -50,6 +53,7 @@ services:
   kafka_3:
     image: wurstmeister/kafka:2.13-2.8.1
     container_name: kafka_3
+    platform: linux/amd64
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
@@ -70,6 +74,7 @@ services:
   prometheus:
     image: prom/prometheus:v2.38.0
     container_name: prometheus
+    platform: linux/amd64
     restart: always
     ports:
       - 9090:9090
@@ -83,6 +88,7 @@ services:
   grafana:
     image: grafana/grafana:9.1.1
     container_name: grafana
+    platform: linux/amd64
     restart: always
     volumes:
       - ./prometheus_ds.yml:/etc/grafana/provisioning/datasources/prometheus_ds.yml
