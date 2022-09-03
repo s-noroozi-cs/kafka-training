@@ -34,3 +34,17 @@ services:
     depends_on:
       - kafka
     restart: always
+
+  burrow-stats:
+    image: tulios/burrow-stats:latest
+    container_name: burrow-stats
+    platform: linux/amd64
+    environment:
+      - PORT=8022
+    volumes:
+      - ./configs.json:/opt/burrow-stats/configs.json
+    ports:
+      - 8022:8022
+    depends_on:
+      - burrow
+    restart: always
