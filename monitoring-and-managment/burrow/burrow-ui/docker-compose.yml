@@ -40,7 +40,7 @@ services:
     container_name: burrow-stats
     platform: linux/amd64
     environment:
-      - BURROW_HOME=http://burrow/v3/kafka
+      - BURROW_HOME=http://burrow:8000/v3/kafka
     ports:
       - 3000:3000
     depends_on:
