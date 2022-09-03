@@ -1,10 +1,9 @@
 {
   "consumers": [
     {
-      "name": "consumer_name_1",
-      "status": "http://burrow:8000/v3/kafka/cluster_name/consumer/consumer_name_1/status",
-      "consumer_group_offset": "http://burrow:8000/v3/kafka/cluster_name/consumer/consumer_name_1/topic/topic_name_1",
-      "topic_offset": "http://burrow:8000/v3/kafka/cluster_name/topic/topic_name_1"
+      "name": "test-consumer-group",
+      "status": "http://burrow:8000/v3/kafka/local/consumer/test-consumer-group/status",
+      "topic_offset": "http://burrow:8000/v3/kafka/local/topic/replicated-topic"
     }
   ],
   "chartOptions": {
@@ -15,7 +14,7 @@
     "scaleStartValue": null
   },
   "burrowStatsOptions": {
-    "pollInterval": 60,
-    "cacheBinSize": 30
+    "pollInterval": 10,
+    "cacheBinSize": 5
   }
 }
