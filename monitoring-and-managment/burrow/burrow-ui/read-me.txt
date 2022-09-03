@@ -5,6 +5,7 @@ create topic
 	./kafka-topics.sh --bootstrap-server kafka:9092 --create --topic replicated-topic --partitions 3 --replication-factor 1 
     
 start producer 
+	
 	./kafka-producer-perf-test.sh --topic replicated-topic --num-records 10000000 --record-size 10 \
   		--throughput 1000 --producer-props bootstrap.servers=kafka:9092
 
