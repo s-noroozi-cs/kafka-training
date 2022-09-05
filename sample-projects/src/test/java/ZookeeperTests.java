@@ -60,4 +60,23 @@ public class ZookeeperTests {
             throw new RuntimeException(ex.getMessage(), ex);
         }
     }
+
+    @Test
+    void check_set_data() {
+        try {
+            String path = "/" + UUID.randomUUID();
+            String data = String.valueOf(System.currentTimeMillis());
+            zk.create(path, data.getBytes(StandardCharsets.UTF_8), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            zk.setData(path, "new-data".getBytes(StandardCharsets.UTF_8), 0);
+
+            Assertions.assertThrowsExactly(KeeperException.BadVersionException.class, () -> {
+                zk.setData(path, "new-data".getBytes(StandardCharsets.UTF_8), 0);
+            });
+
+            zk.setData(path, "new-data".getBytes(StandardCharsets.UTF_8), 1);
+
+        } catch (Throwable ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
+    }
 }
