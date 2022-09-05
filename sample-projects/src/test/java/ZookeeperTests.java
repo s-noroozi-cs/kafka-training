@@ -1,15 +1,18 @@
-import org.apache.zookeeper.WatchedEvent;
-import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.ZooKeeper;
-import org.junit.jupiter.api.*;
+import org.apache.zookeeper.*;
+import org.apache.zookeeper.data.Stat;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
+import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ZookeeperTests {
 
     private ZooKeeper zk;
-    
+
     @BeforeEach
     void connect_zookeeper() {
         try {
@@ -42,5 +45,19 @@ public class ZookeeperTests {
         Assertions.assertNotNull(zk);
         Assertions.assertEquals(true, zk.getState().isConnected());
         Assertions.assertEquals(true, zk.getState().isAlive());
+    }
+
+    @Test
+    void check_create_node() {
+        try {
+            String path = "/" + UUID.randomUUID();
+            String data = String.valueOf(System.currentTimeMillis());
+            zk.create(path, data.getBytes(StandardCharsets.UTF_8), ZooDefs.Ids.OPEN_ACL_UNSAFE, CreateMode.PERSISTENT);
+            Stat stat = zk.exists(path, true);
+            Assertions.assertEquals(0, stat.getVersion());
+            Assertions.assertEquals(0, stat.getNumChildren());
+        } catch (Throwable ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
 }
