@@ -23,6 +23,7 @@
         <kafka.client.version>3.2.0</kafka.client.version>
         <logback.version>1.2.11</logback.version>
         <gson.version>2.9.0</gson.version>
+        <zookeeper.version>3.8.0</zookeeper.version>
 
     </properties>
 
@@ -57,6 +58,14 @@
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.zookeeper</groupId>
+            <artifactId>zookeeper</artifactId>
+            <version>${zookeeper.version}</version>
+        </dependency>
+
+
 
 
     </dependencies>
