@@ -1,0 +1,32 @@
+version: '3'
+
+services:
+
+  zookeeper:
+    image: zookeeper:3.7.0
+    restart: always
+    container_name: zookeeper
+      
+  kafka:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka:9092
+    depends_on:
+      - zookeeper
+
+  kafka_ui:
+    image: provectuslabs/kafka-ui:latest
+    container_name: kafka_ui
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - KAFKA_CLUSTERS_0_NAME=local
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_JMXPORT=9997
+    depends_on:
+      - kafka
