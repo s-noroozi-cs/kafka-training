@@ -7,14 +7,34 @@ services:
     restart: always
     container_name: zookeeper
       
-  kafka:
+  kafka_1:
     image: wurstmeister/kafka:2.13-2.8.1
-    container_name: kafka
+    container_name: kafka_1
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
        - KAFKA_LISTENERS=plaintext://:9092
-       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092
+    depends_on:
+      - zookeeper
+  kafka_2:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka_2
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9093
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_2:9093
+    depends_on:
+      - zookeeper
+  kafka_3:
+    image: wurstmeister/kafka:2.13-2.8.1
+    container_name: kafka_3
+    restart: always
+    environment:
+       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
+       - KAFKA_LISTENERS=plaintext://:9094
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_3:9094
     depends_on:
       - zookeeper
 
@@ -26,7 +46,9 @@ services:
       - 8080:8080
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka:9092
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_1:9092
       - KAFKA_CLUSTERS_0_JMXPORT=9997
     depends_on:
-      - kafka
+      - kafka_1
+      - kafka_2
+      - kafka_3
