@@ -1,0 +1,21 @@
+docker-compose up
+
+open http://localhost:8080
+
+
+create topic
+
+	./kafka-topics.sh --bootstrap-server kafka_1:9092 --create --topic replicated-topic --partitions 3 --replication-factor 3
+    
+start producer 
+	./kafka-producer-perf-test.sh --topic replicated-topic --num-records 10000000 --record-size 10 \
+	      --throughput 10 --producer-props bootstrap.servers=kafka_1:9092
+
+start consumers
+	
+	3 instances for same consumer group
+
+		./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
+			--consumer-property client.id=test-client-id-1 \
+			--consumer-property enable.auto.commit=true \
+			--topic replicated-topic --bootstrap-server kafka_1:9092
