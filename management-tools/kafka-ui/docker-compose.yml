@@ -15,6 +15,7 @@ services:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
        - KAFKA_LISTENERS=plaintext://:9092
        - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka_1 -Dcom.sun.management.jmxremote.rmi.port=1099
     depends_on:
       - zookeeper
   kafka_2:
@@ -23,8 +24,9 @@ services:
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-       - KAFKA_LISTENERS=plaintext://:9093
-       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_2:9093
+       - KAFKA_LISTENERS=plaintext://:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_2:9092
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka_2 -Dcom.sun.management.jmxremote.rmi.port=1099
     depends_on:
       - zookeeper
   kafka_3:
@@ -33,8 +35,9 @@ services:
     restart: always
     environment:
        - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
-       - KAFKA_LISTENERS=plaintext://:9094
-       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_3:9094
+       - KAFKA_LISTENERS=plaintext://:9092
+       - KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_3:9092
+       - KAFKA_JMX_OPTS=-Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=kafka_3 -Dcom.sun.management.jmxremote.rmi.port=1099
     depends_on:
       - zookeeper
 
@@ -46,8 +49,11 @@ services:
       - 8080:8080
     environment:
       - KAFKA_CLUSTERS_0_NAME=local
-      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_1:9092
-      - KAFKA_CLUSTERS_0_JMXPORT=9997
+      - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=kafka_3:9092
+      - KAFKA_CLUSTERS_0_JMXPORT=1099
+      - KAFKA_CLUSTERS_0_JMXSSL=false
+      - KAFKA_CLUSTERS_0_JMXUSERNAME=
+      - KAFKA_CLUSTERS_0_JMXPASSWORD=
     depends_on:
       - kafka_1
       - kafka_2
