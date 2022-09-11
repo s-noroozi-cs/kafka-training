@@ -12,8 +12,6 @@ start producer
 	      --throughput 10 --producer-props bootstrap.servers=kafka_1:9092
 
 start consumers
-	
-	3 instances for same consumer group
 
 		./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
 			--consumer-property client.id=test-client-id-1 \
