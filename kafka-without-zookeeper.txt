@@ -18,8 +18,9 @@ create topic
 	./kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test --partitions 3 --replication-factor 1
     
 start producer 
-	./kafka-console-producer.sh --topic test bootstrap.servers=localhost:9092
+
+	./kafka-console-producer.sh --topic test --bootstrap-servers localhost:9092
 
 start consumers
 	
-		./kafka-console-consumer.sh --topic test --bootstrap-server localhost:9092
+	./kafka-console-consumer.sh --topic test --bootstrap-server localhost:9092
