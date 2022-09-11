@@ -1,0 +1,16 @@
+1. download and extract java and set java home
+
+2. download and extract kafka binary
+
+3. change current directoy to bin directory of kafka
+
+4. ./kafka-storage.sh random-uuid
+
+5. ./kafka-storage.sh format -t <uuid> -c ../config/kraft/server.properties
+
+6. ./kafka-server-start.sh ../config/kraft/server.properties
+
+-----------------------------------------------------------------
+
+
+
