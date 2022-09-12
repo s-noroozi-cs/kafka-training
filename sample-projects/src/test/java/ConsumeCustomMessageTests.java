@@ -29,7 +29,7 @@ public class ConsumeCustomMessageTests {
     }
 
     @Test
-    void consume_specific_offset() {
+    void consume_specific_offset_by_time() {
         String topic = Util.getRandomTopicName();
 
         KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
@@ -55,6 +55,33 @@ public class ConsumeCustomMessageTests {
 
 
         records = consume_records(consumer,timestamp);
+        Assertions.assertEquals(5, records.count());
+
+    }
+
+
+    @Test
+    void consume_specific_offset_by_offset() {
+        String topic = Util.getRandomTopicName();
+
+        KafkaProducer producer = new KafkaProducer(KafkaUtil.getDefaultProducerConfig());
+        IntStream.range(0, 10)
+                .mapToObj(String::valueOf)
+                .map(msg -> new ProducerRecord(topic, msg))
+                .forEach(producer::send);
+        producer.close();
+
+        Map<String, String> cfg = KafkaUtil.getDefaultConsumerConfig();
+        cfg.put(KafkaUtil.KAFKA_CONFIG_AUTO_OFFSET_RESET, KafkaUtil.OFFSET_RESET_EARLIEST);
+
+        KafkaConsumer consumer = new KafkaConsumer(cfg);
+        consumer.subscribe(Arrays.asList(topic));
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1500));
+        Assertions.assertEquals(10, records.count());
+
+
+        consumer.seek(new TopicPartition(topic,0),5);
+        records = consumer.poll(Duration.ofMillis(1500));
         Assertions.assertEquals(5, records.count());
 
     }
