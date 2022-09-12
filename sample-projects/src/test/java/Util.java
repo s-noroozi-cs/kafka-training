@@ -10,8 +10,16 @@ public class Util {
         return "test-" + getRandomNumber();
     }
 
-    public static String getRandomProducerTrxCfg(){
+    public static String getRandomProducerTrxCfg() {
         return "prod-" + getRandomNumber();
+    }
+
+    public static void sleep(long milliSec) {
+        try {
+            Thread.sleep(milliSec);
+        } catch (Throwable ex) {
+            throw new RuntimeException(ex.getMessage(), ex);
+        }
     }
 
     public static String getRandomConsumerGroupId() {
