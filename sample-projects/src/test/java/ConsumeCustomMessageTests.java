@@ -80,9 +80,9 @@ public class ConsumeCustomMessageTests {
         Assertions.assertEquals(10, records.count());
 
 
-        consumer.seek(new TopicPartition(topic,0),5);
+        consumer.seek(new TopicPartition(topic,0),6);
         records = consumer.poll(Duration.ofMillis(1500));
-        Assertions.assertEquals(5, records.count());
+        Assertions.assertEquals(4, records.count());
 
     }
 }
