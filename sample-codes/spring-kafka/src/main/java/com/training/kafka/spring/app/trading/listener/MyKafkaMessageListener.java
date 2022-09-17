@@ -11,7 +11,7 @@ public class MyKafkaMessageListener {
             , autoStartup = "false"
             , topics = "${kafka.consumer.topic:test}")
     public void listen(Message message){
-
+        System.out.println(message);
     }
 
 }
