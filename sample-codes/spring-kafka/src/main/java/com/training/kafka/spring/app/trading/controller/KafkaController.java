@@ -18,7 +18,7 @@ public class KafkaController {
     @PostMapping("/messages/{topic}")
     public ResponseEntity sendSingleMessage(@PathVariable("topic") String topic, @RequestBody String message) {
         ListenableFuture<SendResult<String, String>> future = kafkaTemplate.send(topic, message);
-        future.addCallback(new MyListenableFutureCallback());
+        future.addCallback(MyListenableFutureCallback.INSTANCE);
         return ResponseEntity.ok().build();
     }
 }
