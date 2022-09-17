@@ -1,0 +1,6 @@
+to see which broker is controller
+    ./zookeeper-shell.sh localhost get /controller
+
+to describe all topic status:
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+
