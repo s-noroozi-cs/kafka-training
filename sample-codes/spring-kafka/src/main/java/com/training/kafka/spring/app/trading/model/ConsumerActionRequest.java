@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class ConsumerActionRequest {
     private Action action;
+    private String offsetDateTime;
 
     public boolean hasValidAction() {
         for (Action act : Action.values()) {
