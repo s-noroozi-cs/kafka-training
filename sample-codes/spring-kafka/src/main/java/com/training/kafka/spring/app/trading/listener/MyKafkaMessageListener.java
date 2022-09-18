@@ -18,6 +18,7 @@ public class MyKafkaMessageListener implements ConsumerSeekAware {
 
     @KafkaListener(id = "${kafka.consumer.id:myKafkaMsgConsumer}"
             , autoStartup = "false"
+            //,concurrency = "1"
             , topics = "${kafka.consumer.topic:test}")
     public void listen(Message<String> message) {
         logger.info("receive message: " + message.toString());
