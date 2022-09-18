@@ -3,6 +3,7 @@ package com.training.kafka.spring.app.trading.controller;
 import com.training.kafka.spring.app.trading.config.MyListenableFutureCallback;
 import com.training.kafka.spring.app.trading.model.Action;
 import com.training.kafka.spring.app.trading.model.ConsumerActionRequest;
+import com.training.kafka.spring.app.trading.service.KafkaListenerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +22,14 @@ public class KafkaController {
 
     private Logger logger = LoggerFactory.getLogger(KafkaController.class);
 
-    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+    private KafkaListenerService service;
 
     @Autowired
-    private KafkaListenerEndpointRegistry kafkaListenerEndpointRegistry;
+    public KafkaController(KafkaTemplate<String, String> kafkaTemplate, KafkaListenerService service) {
+        this.kafkaTemplate = kafkaTemplate;
+        this.service = service;
+    }
 
     @PostMapping("/messages/{topic}")
     public ResponseEntity sendSingleMessage(@PathVariable("topic") String topic, @RequestBody String message) {
@@ -38,24 +42,15 @@ public class KafkaController {
     public ResponseEntity manageConsumer(@PathVariable("id") String id,
                                          @RequestBody ConsumerActionRequest actionRequest) {
 
-        MessageListenerContainer listenerContainer = kafkaListenerEndpointRegistry.getListenerContainer(id);
-
-        if (listenerContainer == null)
-            return ResponseEntity
-                    .status(HttpStatus.NOT_FOUND)
-                    .body("consumer id: " + id + " is not valid");
-
         if (!actionRequest.hasValidAction())
             return ResponseEntity.badRequest().body("Action request is not valid.");
 
+        if (!service.isValidMessageListenerContainer(id))
+            return ResponseEntity
+                    .status(HttpStatus.NOT_FOUND)
+                    .body("consumer: " + id + " is not valid");
 
-        if (Action.Start.equals(actionRequest.getAction())) {
-            listenerContainer.start();
-        } else {
-            listenerContainer.stop(() -> {
-                logger.info("Consumer with id: " + id + " stopped successfully.");
-            });
-        }
+        service.manageConsumer(id,actionRequest.getAction());
 
         return ResponseEntity.ok().build();
     }
