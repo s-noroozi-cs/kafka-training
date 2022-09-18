@@ -3,6 +3,8 @@ package com.training.kafka.spring.app.trading.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 public class ConsumerActionRequest {
@@ -15,5 +17,9 @@ public class ConsumerActionRequest {
                 return true;
         }
         return false;
+    }
+
+    public LocalDateTime getOffsetDateTimeAsLocalDateTime(){
+        return LocalDateTime.parse(offsetDateTime);
     }
 }

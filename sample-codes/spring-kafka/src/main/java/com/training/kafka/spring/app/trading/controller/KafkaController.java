@@ -50,7 +50,7 @@ public class KafkaController {
                     .status(HttpStatus.NOT_FOUND)
                     .body("consumer: " + id + " is not valid");
 
-        service.manageConsumer(id,actionRequest.getAction());
+        service.manageConsumer(id,actionRequest);
 
         return ResponseEntity.ok().build();
     }
