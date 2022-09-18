@@ -1,2 +1,15 @@
-curl -X POST http://localhost:8080/api/v1/controller/messages/test -d msg_123
+curl -X POST http://localhost:8080/api/v1/controller/messages/test \
+     -H 'content-type: text/plain' \
+     -d 'msg_123'
 
+curl -X POST http://localhost:8080/api/v1/controller/consumers/myKafkaMsgConsumer \
+     -H 'content-type: application/json' \
+     -d '{"action":"Start"}'
+
+curl -X POST http://localhost:8080/api/v1/controller/consumers/myKafkaMsgConsumer \
+     -H 'content-type: application/json' \
+     -d '{"action":"Stop"}'
+
+curl -X POST http://localhost:8080/api/v1/controller/consumers/myKafkaMsgConsumer \
+     -H 'content-type: application/json' \
+     -d '{"action":"Seek","offsetDateTime":"2022-09-18T23:00:00"}'
