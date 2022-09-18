@@ -18,6 +18,9 @@ public class KafkaConsumerConfig {
     @Value(value = "${kafka.bootstrapServer:localhost:9092}")
     private String bootstrapServer;
 
+    @Value(value = "${kafka.consumer.concurrency:10}")
+    private int consumerConcurrency;
+
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
         Map<String, Object> props = new HashMap<>();
@@ -32,6 +35,7 @@ public class KafkaConsumerConfig {
         ConcurrentKafkaListenerContainerFactory<String, String> factory =
                 new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
+        factory.setConcurrency(consumerConcurrency);
         return factory;
     }
 
