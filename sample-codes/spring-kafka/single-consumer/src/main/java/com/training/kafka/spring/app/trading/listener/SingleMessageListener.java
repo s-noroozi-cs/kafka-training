@@ -22,17 +22,10 @@ public class SingleMessageListener implements ConsumerSeekAware {
 
 
     @KafkaListener(id = "${kafka.batch.consumer.id:singleConsumer}"
-            , autoStartup = "true"
-            ,concurrency = "3"
+            , autoStartup = "false"
             , topics = "${kafka.consumer.topic:test}")
-    public void listen(
-//            @Payload List<String> message,
-//            @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
-//            @Header(KafkaHeaders.OFFSET) List<Long> offsets
-
-            Message<String> message
-    ) {
-        logger.info("receive message: " + message.toString());
+    public void listen(Message<String> message) {
+        logger.info("receive message: " + message.getPayload());
     }
 
 

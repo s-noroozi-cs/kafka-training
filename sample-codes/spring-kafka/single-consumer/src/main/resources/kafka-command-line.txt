@@ -9,6 +9,11 @@ to create partition with custom config
                       --topic test --create \
                       --partitions 3 --replication-factor 1
 
+increase partition size
+    ./kafka-topics.sh --bootstrap-server localhost:9092 \
+                      --topic test --alter \
+                      --partitions 4
+
 to consume message from beginning
     ./kafka-console-consumer.sh --bootstrap-server localhost:9092 \
                                 --topic test \
