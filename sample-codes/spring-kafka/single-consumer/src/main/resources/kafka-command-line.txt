@@ -1,0 +1,16 @@
+to see which broker is controller
+    ./zookeeper-shell.sh localhost get /controller
+
+to describe all topic status:
+    ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+
+to create partition with custom config
+    ./kafka-topics.sh --bootstrap-server localhost:9092 \
+                      --topic test --create \
+                      --partitions 3 --replication-factor 1
+
+to consume message from beginning
+    ./kafka-console-consumer.sh --bootstrap-server localhost:9092 \
+                                --topic test \
+                                --from-beginning
+
