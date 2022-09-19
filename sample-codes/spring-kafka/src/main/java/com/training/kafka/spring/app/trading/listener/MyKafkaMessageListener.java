@@ -12,11 +12,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class MyKafkaMessageListener implements ConsumerSeekAware {
     private Logger logger = LoggerFactory.getLogger(MyKafkaMessageListener.class);
-    @Value("${kafka.consumer.id:myKafkaMsgConsumer}")
+    @Value("${kafka.consumer.id:singleConsumer}")
     private String consumerId;
 
 
-    @KafkaListener(id = "${kafka.consumer.id:myKafkaMsgConsumer}"
+    @KafkaListener(id = "${kafka.consumer.id:singleConsumer}"
             , autoStartup = "false"
             //,concurrency = "1"
             , topics = "${kafka.consumer.topic:test}")
