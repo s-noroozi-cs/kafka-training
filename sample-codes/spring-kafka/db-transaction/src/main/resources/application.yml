@@ -1,0 +1,14 @@
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      transaction-id-prefix: tx-
+      properties:
+        enable.idempotence: true
+    consumer:
+      group-id: datx-consumer-group-1
+      enable-auto-commit: false
+      isolation-level: read_committed
+  h2:
+    console:
+      enabled: true
