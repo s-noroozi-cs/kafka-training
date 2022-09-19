@@ -24,7 +24,6 @@ public class BatchMessageListener implements ConsumerSeekAware {
 
     @KafkaListener(id = "${kafka.single.consumer.id:batchConsumer}"
             , autoStartup = "false"
-            ,batch = "true"
             , topics = "${kafka.consumer.topic:test}")
     public void listen(@Payload List<String> messages,
                        @Header(KafkaHeaders.RECEIVED_PARTITION_ID) List<Integer> partitions,
