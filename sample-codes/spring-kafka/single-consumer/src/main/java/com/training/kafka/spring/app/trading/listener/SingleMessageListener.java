@@ -1,6 +1,8 @@
 package com.training.kafka.spring.app.trading.listener;
 
 import com.training.kafka.spring.app.trading.config.ShareContainer;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.common.TopicPartition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class SingleMessageListener implements ConsumerSeekAware {
@@ -25,9 +28,8 @@ public class SingleMessageListener implements ConsumerSeekAware {
             , autoStartup = "false"
             , topics = "${kafka.consumer.topic:test}")
     public void listen(Message<String> message) {
-        logger.info("receive message: " + message.getPayload());
+        logger.info("receive message: " + message);
     }
-
 
     @Override
     public void registerSeekCallback(ConsumerSeekCallback callback) {

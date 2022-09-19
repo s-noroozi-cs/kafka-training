@@ -1,6 +1,6 @@
 curl -X POST http://localhost:8080/api/v1/controller/messages/test \
      -H 'content-type: text/plain' \
-     -d 'msg_123'
+     -d '1'
 
 curl -X POST http://localhost:8080/api/v1/controller/consumers/singleConsumer \
      -H 'content-type: application/json' \
@@ -12,4 +12,4 @@ curl -X POST http://localhost:8080/api/v1/controller/consumers/singleConsumer \
 
 curl -X POST http://localhost:8080/api/v1/controller/consumers/singleConsumer \
      -H 'content-type: application/json' \
-     -d '{"action":"Seek","offsetDateTime":"2022-09-18T23:00:00"}'
+     -d '{"action":"Seek","offsetDateTime":"2022-09-19T21:00:00"}'
