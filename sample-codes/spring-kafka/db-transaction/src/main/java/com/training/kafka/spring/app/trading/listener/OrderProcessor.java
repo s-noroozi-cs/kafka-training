@@ -5,10 +5,15 @@ import com.training.kafka.spring.app.trading.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.DltHandler;
 import org.springframework.kafka.annotation.KafkaHandler;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Component;
 
-@KafkaListener(topics = "orders")
+@Component
 public class OrderProcessor {
     Logger logger = LoggerFactory.getLogger(OrderProcessor.class);
     private OrderRepository repository;
@@ -18,7 +23,7 @@ public class OrderProcessor {
         this.repository = repository;
     }
 
-    @KafkaHandler
+    @KafkaListener(topics = "orders")
     public void process(String order) {
         logger.info("receive order: " + order);
 
@@ -30,4 +35,5 @@ public class OrderProcessor {
             throw new RuntimeException("rollback");
         }
     }
+
 }

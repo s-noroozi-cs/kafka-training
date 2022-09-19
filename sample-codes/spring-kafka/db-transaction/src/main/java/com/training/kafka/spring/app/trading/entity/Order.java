@@ -2,16 +2,14 @@ package com.training.kafka.spring.app.trading.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @ToString
+@Table(name = "tb_orders")
 public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

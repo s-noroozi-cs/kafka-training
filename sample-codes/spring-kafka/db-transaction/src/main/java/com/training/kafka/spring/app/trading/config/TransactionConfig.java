@@ -2,6 +2,8 @@ package com.training.kafka.spring.app.trading.config;
 
 
 import org.apache.kafka.clients.admin.NewTopic;
+import org.apache.kafka.clients.consumer.Consumer;
+import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.boot.autoconfigure.kafka.ConcurrentKafkaListenerContainerFactoryConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,6 +13,10 @@ import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
+import org.springframework.kafka.listener.CommonErrorHandler;
+import org.springframework.kafka.listener.DeadLetterPublishingRecoverer;
+import org.springframework.kafka.listener.MessageListenerContainer;
+import org.springframework.kafka.listener.SeekToCurrentErrorHandler;
 import org.springframework.kafka.transaction.ChainedKafkaTransactionManager;
 import org.springframework.kafka.transaction.KafkaTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -19,7 +25,7 @@ import javax.persistence.EntityManagerFactory;
 import java.util.UUID;
 
 @Configuration
-public class MyAppConfig {
+public class TransactionConfig {
 
     @Bean
     public JpaTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
@@ -69,10 +75,4 @@ public class MyAppConfig {
         kafkaTransactionManager.setTransactionIdPrefix(String.format("tx-%s-", UUID.randomUUID().toString()));
         return kafkaTransactionManager;
     }
-
-    @Bean
-    public NewTopic topicOrders() {
-        return TopicBuilder.name("orders").partitions(1).replicas(1).build();
-    }
-
 }
