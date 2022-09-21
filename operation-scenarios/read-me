@@ -13,5 +13,7 @@
 						 --bootstrap-server localhost:9092 \
 						 --partitions 10 \
 						 --replication-factor 3
+	8. docker stop kafka_*
+	9. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
 
 	
