@@ -1,10 +1,11 @@
 --- scenario for ack and min insync replica 
 
 	1. docker-compose up -d
-	2. docker exec -it kafka_1 /bin/bash
-	3. cd /opt/kafka/bin/
-	4. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
-	5. ./kafka-topics.sh --create --topic t1 \
+	2. docker logs kafka_? | grep  "KafkaServer id="
+	3. docker exec -it kafka_1 /bin/bash
+	4. cd /opt/kafka/bin/
+	5. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+	6. ./kafka-topics.sh --create --topic t1 \
 						 --bootstrap-server localhost:9092
 	6. ./kafka-topics.sh --create --topic t2 \
 						 --bootstrap-server localhost:9092 \
