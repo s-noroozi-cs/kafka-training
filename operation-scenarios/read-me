@@ -16,9 +16,19 @@
 						 --replication-factor 3
 	9. docker stop kafka_*
 	10. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
-	11. add following parameters and repeat again
-		1. -e auto.leader.rebalance.enable=true 
-		2. leader.imbalance.check.interval_seconds=5
-	
+	11. create json file to define topic that required reasignment partitions
+		{
+			"topics": [
+				{
+					"topic":"t2"
+				}
+			]
+			,"version":1
+		}
+	./kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
+								   --generate \
+								   --topics-to-move-json-file test-topic.json \
+								   --broker-list "1001,1002,1003"
+
 
 	
