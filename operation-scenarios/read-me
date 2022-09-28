@@ -7,14 +7,18 @@
 	5. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
 	6. ./kafka-topics.sh --create --topic t1 \
 						 --bootstrap-server localhost:9092
-	6. ./kafka-topics.sh --create --topic t2 \
+	7. ./kafka-topics.sh --create --topic t2 \
 						 --bootstrap-server localhost:9092 \
 						 --partitions 10
-	7. ./kafka-topics.sh --create --topic t3 \
+	8. ./kafka-topics.sh --create --topic t3 \
 						 --bootstrap-server localhost:9092 \
 						 --partitions 10 \
 						 --replication-factor 3
-	8. docker stop kafka_*
-	9. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+	9. docker stop kafka_*
+	10. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+	11. add following parameters and repeat again
+		1. -e auto.leader.rebalance.enable=true 
+		2. leader.imbalance.check.interval_seconds=5
+	
 
 	
