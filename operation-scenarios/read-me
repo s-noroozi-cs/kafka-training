@@ -16,6 +16,7 @@
 						 --replication-factor 3
 	9. docker stop kafka_*
 	10. ./kafka-topics.sh --bootstrap-server localhost:9092 --describe
+	11. leader of some partition --> none
 	11. create json file to define topic that required reasignment partitions
 		{
 			"topics": [
@@ -25,10 +26,25 @@
 			]
 			,"version":1
 		}
-	./kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
+		./kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
 								   --generate \
 								   --topics-to-move-json-file test-topic.json \
 								   --broker-list "1001,1002,1003"
 
+		Current partition replica assignment
+			...
+		Proposed partition reassignment configuration
+			...
 
-	
+		copy content of Proposed to new file --> topic-part.cfg
+
+
+			./kafka-reassign-partitions.sh --bootstrap-server localhost:9092 \
+								--reassignment-json-file topic-part.cfg \
+								--execute
+
+		./kafka-leader-election.sh --bootstrap-server localhost:9092 \
+							--topic t2 \
+							--partition 1 \
+							--election-type unclean
+		
