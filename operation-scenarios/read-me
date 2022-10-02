@@ -60,4 +60,48 @@
 							--reassignment-json-file topic-part.cfg \
 							--execute
 
+
+	retention
+
+	1. docker run -d --name zookeeper -p 2181:2181 zookeeper:3.7.0
+	2. docker run -d --name kafka_1 --link zookeeper -p 9092:9092 \
+			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+			-e KAFKA_LISTENERS=plaintext://:9092 \
+			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
+			wurstmeister/kafka:2.13-2.8.1
+	3. docker exec -it kafka_1 /bin/bash
+	4. du -h /kafka
+	5. ./kafka-topics.sh --create --topic t1 \
+						 --bootstrap-server localhost:9092
+	6. du -h /kafka
+		./kafka-producer-perf-test.sh --topic t1 \
+					--num-records 300000 --record-size 1000 \
+	      			--throughput 1000 \
+	      			--producer-props bootstrap.servers=localhost:9092
+	7. du -h /kafka
+
+	stop kafka and start with new config
+	8. docker run -d --name zookeeper -p 2181:2181 zookeeper:3.7.0
+	9. docker run -d --name kafka_1 --link zookeeper -p 9092:9092 \
+			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+			-e KAFKA_LISTENERS=plaintext://:9092 \
+			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
+			-e KAFKA_LOG_RETENTION_MS=3000 \
+		    -e KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS=5000 \
+		    -e KAFKA_LOG_SEGMENT_BYTES=100 \
+			wurstmeister/kafka:2.13-2.8.1
+	10. du -h /kafka
+	11. ./kafka-topics.sh --create --topic t2 \
+						 --bootstrap-server localhost:9092
+	12. ./kafka-producer-perf-test.sh --topic t2 \
+					--num-records 300000 --record-size 1000 \
+	      			--throughput 1000 \
+	      			--producer-props bootstrap.servers=localhost:9092
+	13. watch "du -h /kafka"
+	14. docker logs -f kafka_1
+	15. 
+
+
+
+
 		
