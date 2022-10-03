@@ -102,23 +102,39 @@
 
 
 	--- compaction ---
+		docker run -d --name zookeeper -p 2181:2181 zookeeper:3.7.0
 
+		docker run -it --name kafka_1 --link zookeeper -p 9092:9092 \
+			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+			-e KAFKA_LISTENERS=plaintext://:9092 \
+			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
+			wurstmeister/kafka:2.13-2.8.1
+
+		./kafka-topics.sh --create --topic t1 \
+						 --bootstrap-server localhost:9092
+
+
+	
 	./kafka-console-consumer.sh \
-		--bootstrap-server 192.168.163.63:9092 \
+		--bootstrap-server localhost:9092 \
 		--topic t1 \
 		--from-beginning
 
 
 	./kafka-console-producer.sh \
-		--bootstrap-server 192.168.163.63:9092 \
+		--bootstrap-server localhost:9092 \
 		--topic t1 \
 		--property parse.key=true \
 		--property key.separator=:
 
-
-
-	KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100
-
+	docker run -it --name kafka_1 --link zookeeper -p 9092:9092 \
+			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+			-e KAFKA_LISTENERS=plaintext://:9092 \
+			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
+			-e KAFKA_LOG_CLEANUP_POLICY=compact \
+			-e KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100 \
+			-e KAFAK_DELETE.RETENTION.MS=100 \
+			wurstmeister/kafka:2.13-2.8.1
 
 
 		
