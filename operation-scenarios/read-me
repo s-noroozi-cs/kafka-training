@@ -196,7 +196,7 @@
 	sudo tcpdump -i any port 9092 -n -X
 
 
-	create key store and trus store
+	create key store and trus store using key store explore
 
 	docker run -it --hostname kafka --name kafka --link zookeeper -p 9092:9092 \
 			-v /Users/saeid/github/kafka-training/operation-scenarios:/certs \
@@ -212,5 +212,9 @@
 			-e KAFKA_LISTENERS=SSL://:9092 \
 			-e KAFKA_ADVERTISED_LISTENERS=SSL://kafka:9092 \
 			wurstmeister/kafka:2.13-2.8.1
+
+	connecting using offset explorer
+
+	monitoring using tcpdump
 
 	    	
