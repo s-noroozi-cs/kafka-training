@@ -196,4 +196,21 @@
 	sudo tcpdump -i any port 9092 -n -X
 
 
-	keytool -genkey -alias kafka_1 -keyalg RSA -keystore KeyStore.jks -keysize 2048
+	create key store and trus store
+
+	docker run -it --name kafka_1 --link zookeeper -p 9092:9092 \
+			-v /Users/saeid/github/kafka-training/operation-scenarios:/certs \
+			-e KAFKA_SECURITY_INTER_BROKER_PROTOCOL=SSL \
+			-e KAFKA_SSL_ENABLED_PROTOCOLS=TLSv1.2 \
+			-e KAFKA_SSL_CLIENT_AUTH=required \
+			-e KAFKA_SSL_KEYSTORE_LOCATION=/certs/key-store.jks \
+	    	-e KAFKA_SSL_KEYSTORE_PASSWORD=123456 \
+	    	-e KAFKA_SSL_KEY_PASSWORD=123456 \
+	    	-e KAFKA_SSL_TRUSTSTORE_LOCATION=/certs/trust-store.jks \
+	    	-e KAFKA_SSL_TRUSTSTORE_PASSWORD=123456 \
+			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
+			-e KAFKA_LISTENERS=SSL://:9092 \
+			-e KAFKA_ADVERTISED_LISTENERS=SSL://kafka_1:9092 \
+			wurstmeister/kafka:2.13-2.8.1
+
+	    	
