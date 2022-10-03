@@ -194,3 +194,6 @@
 		--topic t1
 
 	sudo tcpdump -i any port 9092 -n -X
+
+
+	keytool -genkey -alias kafka_1 -keyalg RSA -keystore KeyStore.jks -keysize 2048
