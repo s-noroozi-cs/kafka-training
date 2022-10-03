@@ -99,8 +99,25 @@
 	      			--producer-props bootstrap.servers=localhost:9092
 	13. watch "du -h /kafka"
 	14. docker logs -f kafka_1
-	15. 
 
+
+	--- compaction ---
+
+	./kafka-console-consumer.sh \
+		--bootstrap-server 192.168.163.63:9092 \
+		--topic t1 \
+		--from-beginning
+
+
+	./kafka-console-producer.sh \
+		--bootstrap-server 192.168.163.63:9092 \
+		--topic t1 \
+		--property parse.key=true \
+		--property key.separator=:
+
+
+
+	KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100
 
 
 
