@@ -134,7 +134,7 @@
 			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
 			-e KAFKA_LOG_CLEANUP_POLICY=compact \
 			-e KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100 \
-			-e KAFAK_DELETE.RETENTION.MS=100 \
+			-e KAFAK_DELETE_RETENTION_MS=100 \
 			wurstmeister/kafka:2.13-2.8.1
 
 
@@ -162,7 +162,7 @@
 
 	./kafka-topics.sh --create --topic t2 \
 		--bootstrap-server localhost:9092 \
-		--config compression.type=gzip \
+		--config compression.type=zstd \
 		--replication-factor 1 \
 		--partitions 1
 
