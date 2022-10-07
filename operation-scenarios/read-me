@@ -180,7 +180,7 @@
 
 	docker run -d --name zookeeper -p 2181:2181 zookeeper:3.7.0
 
-	docker run -it --name kafka_1 --link zookeeper -p 9092:9092 \
+	docker run -d --name kafka_1 --link zookeeper -p 9092:9092 \
 			-e KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181 \
 			-e KAFKA_LISTENERS=plaintext://:9092 \
 			-e KAFKA_ADVERTISED_LISTENERS=plaintext://kafka_1:9092 \
@@ -198,7 +198,7 @@
 
 	create key store and trus store using key store explore
 
-	docker run -it --hostname kafka --name kafka --link zookeeper -p 9092:9092 \
+	docker run -d --hostname kafka --name kafka --link zookeeper -p 9092:9092 \
 			-v /Users/saeid/github/kafka-training/operation-scenarios:/certs \
 			-e KAFKA_SECURITY_INTER_BROKER_PROTOCOL=SSL \
 			-e KAFKA_SSL_ENABLED_PROTOCOLS=TLSv1.2 \
