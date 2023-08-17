@@ -340,3 +340,13 @@ test add and remove at runtime
 
 add entry to container host file
 docker run --> --add-host=kafka:192.168.163.63
+
+
+------ usefule commands ------
+sudo lsof -i -P | grep LISTEN | grep port-number
+
+echo -n 'Line of text' | nc <ip> <port>
+
+sudo tcpdump -i any port 2181 -nn -vv
+
+tcpdump -i eth1 tcp and host 10.27.13.14 and port 6973 -s0 -vv -X -c 1000
