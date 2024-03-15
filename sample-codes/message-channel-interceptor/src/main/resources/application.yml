@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: management
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: "localhost:9092"
+      bindings:
+        message-producer-out-0:
+          destination: "message.topic"
+        message-consumer-in-0:
+          destination: "message.topic"
+          group: "message-topic-consumer"
+    function:
+      definition: "message-consumer"
