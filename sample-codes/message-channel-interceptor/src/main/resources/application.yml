@@ -7,10 +7,10 @@ spring:
         binder:
           brokers: "localhost:9092"
       bindings:
-        message-producer-out-0:
+        messageProducer-out-0:
           destination: "message.topic"
-        message-consumer-in-0:
+        messageConsumer-in-0:
           destination: "message.topic"
           group: "message-topic-consumer"
     function:
-      definition: "message-consumer"
+      definition: "messageConsumer"

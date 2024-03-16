@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ProducerController {
   @Autowired private StreamBridge streamBridge;
 
-  @Value("${spring.cloud.stream.bindings.message-producer-out-0.destination}")
+  @Value("${spring.cloud.stream.bindings.messageProducer-out-0.destination}")
   private String messageDestination;
 
   @PostMapping("/messages/uuid")
