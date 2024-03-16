@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.http.HttpStatus;
-import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,7 +19,6 @@ public class ProducerController {
   @PostMapping("/messages/uuid")
   @ResponseStatus(HttpStatus.ACCEPTED)
   public void sendUuidMessage() {
-    streamBridge.send(
-        messageDestination, MessageBuilder.withPayload(UUID.randomUUID().toString()).build());
+    CloudStreamUtil.sendMessage(streamBridge, messageDestination, UUID.randomUUID().toString());
   }
 }

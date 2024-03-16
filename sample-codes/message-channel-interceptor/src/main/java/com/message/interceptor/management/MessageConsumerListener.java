@@ -13,13 +13,15 @@ public class MessageConsumerListener {
   public Consumer<Message<String>> messageConsumer() {
     return message -> {
       StringBuilder headers = new StringBuilder();
-      message.getHeaders().forEach((k, v) -> headers.append("%s: %s".formatted(k, v)));
+      message.getHeaders().forEach((k, v) -> headers.append("%s: %s\n".formatted(k, v)));
       log.info(
           """
 
 ================ receive new kafka message ================
- message payload: %s
- message headers: %s
+payload:
+%s
+message headers:
+%s
 """
               .formatted(message.getPayload(), headers));
     };
