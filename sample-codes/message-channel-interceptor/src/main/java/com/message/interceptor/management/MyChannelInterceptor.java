@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.config.BindingServiceProperties;
+import org.springframework.cloud.stream.messaging.DirectWithAttributesChannel;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHeaders;
@@ -16,7 +17,7 @@ import org.springframework.messaging.support.ChannelInterceptor;
 @AllArgsConstructor
 public class MyChannelInterceptor implements ChannelInterceptor {
 
-  private final BindingServiceProperties properties;
+  private final BindingServiceProperties bindingServiceProperties;
   private final String channelType;
 
   enum EVENT {
@@ -46,6 +47,14 @@ public class MyChannelInterceptor implements ChannelInterceptor {
 
   private void log(
       EVENT event, Message<?> message, MessageChannel channel, Boolean sent, Exception ex) {
+
+    String channelName =
+        channel instanceof DirectWithAttributesChannel directWithAttributesChannel
+            ? directWithAttributesChannel.getFullChannelName()
+            : "";
+    String topicName =
+        "fetch binding from header and then transform to destination by binding properties";
+
     String headers =
         Optional.ofNullable(message)
             .map(Message::getHeaders)
