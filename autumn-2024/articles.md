@@ -22,4 +22,6 @@
 
 * https://hub.docker.com/r/apache/kafka
 
+* https://wbarillon.medium.com/install-apache-kafka-kraft-cluster-in-docker-container-0f8214ba3e1e
+
 
