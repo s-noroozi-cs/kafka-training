@@ -18,4 +18,8 @@
 
 * https://medium.com/@penkov.vladimir/kafka-cluster-with-ui-and-metrics-easy-setup-d12d1b94eccf
 
+* https://hub.docker.com/r/apache/kafka
+
+* https://hub.docker.com/r/apache/kafka
+
 
