@@ -15,6 +15,16 @@ release note
 port listen, netstat, lsof port, protocol, listen, ip version --> lsof -i tcp -s tcp:listen -P -n
 
 
+download gzip file 
+
+Kafka with ZooKeeper
+
+    # Start the ZooKeeper service
+    $ bin/zookeeper-server-start.sh config/zookeeper.properties
+
+    # Start the Kafka broker service
+    $ bin/kafka-server-start.sh config/server.properties
+
 
 
 
