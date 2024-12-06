@@ -26,5 +26,31 @@ Kafka with ZooKeeper
     $ bin/kafka-server-start.sh config/server.properties
 
 
+    lsof -i tcp -s tcp:listen -n -P | grep java
+    ps aux | grep java | tr -s ' ' | cut -d' ' -f1
+
+
+Kafka with KRaft
+
+    Generate a Cluster UUID
+        $ bin/kafka-storage.sh random-uuid
+        $ bin/kafka-storage.sh format --standalone -t *** -c config/kraft/reconfig-server.properties
+        view meta.properties in tmp directory
+        $ bin/kafka-server-start.sh config/kraft/reconfig-server.properties
+
+    using docker
+    
+    $ docker pull apache/kafka:3.9.0
+    $ docker run -p 9092:9092 apache/kafka:3.9.0
+
+
+    using native image kafka
+    $ docker pull apache/kafka-native:3.9.0
+    $ docker run -p 9092:9092 apache/kafka-native:3.9.0
+
+    
+
+
+
 
 
