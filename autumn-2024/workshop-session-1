@@ -1,0 +1,20 @@
+======= install kafka =======
+
+reference: https://kafka.apache.org/downloads
+
+why?
+
+difference between regular image or native image 
+
+docker container time zone using env TZ or mount etc local time
+
+difference betwrrn binary version - scala version 
+
+release note
+
+port listen, netstat, lsof port, protocol, listen, ip version --> lsof -i tcp -s tcp:listen -P -n
+
+
+
+
+
