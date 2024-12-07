@@ -24,4 +24,8 @@
 
 * https://wbarillon.medium.com/install-apache-kafka-kraft-cluster-in-docker-container-0f8214ba3e1e
 
+* https://medium.com/@dudu.zbeda_13698/kafka-ui-tool-15fcd2a4c7ac
+
+* https://medium.com/@vortj/ui-for-apache-kafka-clean-modern-and-easy-to-use-20041ecb5578
+
 
