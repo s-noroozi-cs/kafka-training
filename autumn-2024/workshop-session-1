@@ -48,7 +48,16 @@ Kafka with KRaft
     $ docker pull apache/kafka-native:3.9.0
     $ docker run -p 9092:9092 apache/kafka-native:3.9.0
 
+
+offset explorer
+
+kafka ui
+    docker run provectuslabs/kafka-ui:v0.7.2
+    using netstat to check listen port
+    expose ui port 8080
+    configure kafka cluster using cluster name and bootstrap and jmx
     
+
 
 
 
