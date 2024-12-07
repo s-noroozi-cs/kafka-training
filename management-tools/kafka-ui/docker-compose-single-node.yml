@@ -1,0 +1,30 @@
+services:
+  broker:
+    image: apache/kafka:3.7.0
+    container_name: broker
+    environment:
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_LISTENERS: PLAINTEXT://broker:9092,CONTROLLER://localhost:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
+      KAFKA_JMX_PORT: 9997
+      KAFKA_JMX_OPTS: -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false -Djava.rmi.server.hostname=broker -Dcom.sun.management.jmxremote.rmi.port=9997
+
+  kafka_ui:
+      image: provectuslabs/kafka-ui:latest
+      container_name: kafka_ui
+      restart: always
+      ports:
+        - 8080:8080
+      environment:
+        - KAFKA_CLUSTERS_0_NAME=local
+        - KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=broker:9092
+        - KAFKA_CLUSTERS_0_JMXPORT=9997
+        - KAFKA_CLUSTERS_0_JMXSSL=false
+        - KAFKA_CLUSTERS_0_JMXUSERNAME=
+        - KAFKA_CLUSTERS_0_JMXPASSWORD=
+      depends_on:
+        - broker
