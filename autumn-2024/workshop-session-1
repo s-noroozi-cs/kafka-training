@@ -56,6 +56,30 @@ kafka ui
     using netstat to check listen port
     expose ui port 8080
     configure kafka cluster using cluster name and bootstrap and jmx
+
+redpanda console
+
+
+test console producer, console consumer, show lag 
+
+docker run --rm -it --name kafka apache/kafka:3.7.0
+
+docker exec -it kafka bash
+
+netstat -tupln 
+
+docker run --rm -it --name kafka -p 9092:9092 apache/kafka:3.7.0
+
+./kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
+
+./kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic test --from-beginning --group test
+
+./kafka-consumer-groups.sh --bootstrap-server localhost:9092 --group test --describe
+
+
+/opt/kafka/bin/kafka-consul-producer.sh --bootstrap-server localhost:9092 --topic test
+
+
     
 
 
