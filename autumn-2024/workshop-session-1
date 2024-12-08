@@ -79,6 +79,16 @@ docker run --rm -it --name kafka -p 9092:9092 apache/kafka:3.7.0
 
 /opt/kafka/bin/kafka-consul-producer.sh --bootstrap-server localhost:9092 --topic test
 
+over-consumption & under-consumption
+    confluent-example:
+    https://github.com/confluentinc/cp-demo
+
+under-consumption
+    https://www.youtube.com/watch?v=d0tZS5FxdM0
+
+over-consumption
+    https://www.youtube.com/watch?v=ZYnoG59xNCI
+
 
     
 
