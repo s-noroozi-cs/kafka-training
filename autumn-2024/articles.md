@@ -29,3 +29,5 @@
 * https://medium.com/@vortj/ui-for-apache-kafka-clean-modern-and-easy-to-use-20041ecb5578
 
 * https://www.confluent.io/product/confluent-platform/gui-driven-management-and-monitoring/
+
+* https://www.redpanda.com/blog/web-user-interface-tools-kafka
