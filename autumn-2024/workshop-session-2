@@ -1,0 +1,12 @@
+* conduktor console
+
+* kraft meta data model
+    event base
+    hidden topic
+
+
+/tmp/kraft-combined-logs/__cluster_metadata-0/
+
+
+/opt/kafka/bin/kafka-metadata-quorum.sh --bootstrap-server  localhost:9092 describe --status
+
