@@ -31,3 +31,6 @@
 * https://www.confluent.io/product/confluent-platform/gui-driven-management-and-monitoring/
 
 * https://www.redpanda.com/blog/web-user-interface-tools-kafka
+
+* https://stackoverflow.com/questions/78810192/zookeeper-to-kraft-post-migration-question-is-cluster-metadata-actually-a-top
+
