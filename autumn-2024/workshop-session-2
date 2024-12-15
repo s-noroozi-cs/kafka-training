@@ -10,3 +10,5 @@
 
 /opt/kafka/bin/kafka-metadata-quorum.sh --bootstrap-server  localhost:9092 describe --status
 
+
+cluster brokers
