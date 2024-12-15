@@ -34,3 +34,4 @@
 
 * https://stackoverflow.com/questions/78810192/zookeeper-to-kraft-post-migration-question-is-cluster-metadata-actually-a-top
 
+* https://medium.com/towards-data-engineering/unlock-the-power-of-apache-kafka-with-the-official-docker-image-5a65192e618b
