@@ -40,3 +40,10 @@ cluster brokers:
 
 leader and flower
 
+    $ ./kafka-topics.sh --bootstrap-server kafka-1:9092 --topic test --describe
+
+    LEADER SKEW
+
+        auto.leader.rebalance.enable
+
+        leader.imbalance.check.interval.seconds
