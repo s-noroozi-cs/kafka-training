@@ -1,3 +1,7 @@
+* kafka release note
+
+    https://downloads.apache.org/kafka/3.9.0/RELEASE_NOTES.html
+
 * conduktor console
 
 * kraft meta data model
@@ -11,4 +15,28 @@
 /opt/kafka/bin/kafka-metadata-quorum.sh --bootstrap-server  localhost:9092 describe --status
 
 
-cluster brokers
+cluster brokers:
+
+    1. creating an ID to identify the cluster
+        
+        CLUSTER_ID: '1L6w3nShT-ewCtK--z86sw'
+
+    2. Setup the broker configuration
+
+        * roles of the node in cluster, broker and controller
+
+        KAFKA_PROCESS_ROLES: 'broker,controller'
+
+        * A unique node.id is specified for each node in the cluster
+
+        KAFKA_NODE_ID: 1
+        KAFKA_NODE_ID: 2
+        KAFKA_NODE_ID: 3
+
+        * to specify a set of brokers that will participate in the quorum for electing the controller, using the format nodeId@host:port
+
+        KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093'
+
+
+leader and flower
+
