@@ -40,10 +40,37 @@ cluster brokers:
 
 leader and flower
 
-    $ ./kafka-topics.sh --bootstrap-server kafka-1:9092 --topic test --describe
+    $ kafka-topics.sh --bootstrap-server kafka-1:9092 --topic test --describe
 
     LEADER SKEW
 
         auto.leader.rebalance.enable
 
         leader.imbalance.check.interval.seconds
+
+    changes partitions
+    $ kafka-topics.sh --bootstrap-server <broker:port> --topic <topic-name> --alter --partitions <number>
+
+
+    verify partition reassignment
+    $ ./kafka-topics.sh --bootstrap-server kafka-1:9092 --topic test --describe | grep Leader | awk '{print $5 $6'} | sort  | uniq -c
+
+    Decreasing the Partition ?
+        data ?
+        Kafka Connect or MirrorMaker
+        core guarantees of order, durability, and availability.
+
+        Message Ordering:
+            Kafka guarantees that messages within a partition are delivered in the order they were produced. Reducing partitions would require merging partitions, disrupting this order and violating the guarantee.
+        
+        Data Consistency:
+            Partitions store offsets that uniquely identify messages. Reducing partitions would result in offset conflicts, leading to potential data loss or duplication.
+
+        Consumer Group Functionality:
+            Kafka’s consumer group model assigns partitions to consumers. Reducing partitions would disrupt partition assignments, breaking existing consumer workflows.
+
+    add more broker
+
+        
+
+
