@@ -1,5 +1,3 @@
-https://medium.com/@bubu.tripathy/understanding-kafka-tiered-storage-af4dfb267f5d
-
 https://www.instaclustr.com/support/documentation/kafka/useful-concepts/kafka-tiered-storage/
 
 https://developers.redhat.com/articles/2024/03/13/kafka-tiered-storage-deep-dive
@@ -11,4 +9,39 @@ https://www.kai-waehner.de/blog/2023/12/05/why-tiered-storage-for-apache-kafka-i
 https://docs.confluent.io/platform/current/clusters/tiered-storage.html
 
 https://aiven.io/developer/kafka-tiered-storage-terraform
+
+
+
+Traditional Kafka deployments often rely on 
+    direct-attached storage (DAS) or 
+    network-attached storage (NAS) 
+for storing the data.
+
+The idea is to use different storage layers based on the characteristics of the data
+
+In a Kafka cluster, not all data is created equal. Some data, 
+    referred to as 
+        
+        “hot” data, is frequently accessed and needs to be readily available for quick retrieval. 
+        Hot Tier (SSD/NVMe)
+        high-performance and low-latency access
+        data most critical for real-time processing is readily available
+        Specify Hot Tier Directory
+            # Server Properties for Hot Tier
+            log.dirs=/path/to/hot/tier
+
+    On the other hand, 
+        
+        “cold” data, which is less frequently accessed, can be moved to a more cost-effective and scalable storage solution
+        Cold Tier (HDD/S3)
+        designed for cost efficiency and scalability
+        historical and less frequently accessed data
+        organizations can reduce storage costs
+        maintaining the ability to access historical information
+
+    
+
+
+
+
 
