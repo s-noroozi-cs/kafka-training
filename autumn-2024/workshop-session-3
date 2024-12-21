@@ -1,5 +1,3 @@
-https://www.instaclustr.com/support/documentation/kafka/useful-concepts/kafka-tiered-storage/
-
 https://developers.redhat.com/articles/2024/03/13/kafka-tiered-storage-deep-dive
 
 https://developers.redhat.com/articles/2023/11/22/getting-started-tiered-storage-apache-kafka
@@ -38,6 +36,34 @@ In a Kafka cluster, not all data is created equal. Some data,
         historical and less frequently accessed data
         organizations can reduce storage costs
         maintaining the ability to access historical information
+
+Apache Kafka’s Tiered Storage is a data management strategy 
+    that categorizes storage into two tiers i.e. local and remote
+
+Without support of tiered storage,  a Kafka cluster’s storage can be scaled by 
+    adding more broker nodes or 
+    replacing current nodes with higher capacity nodes. 
+It is not a cost-effective way of increasing storage. 
+    Adding new nodes would also require copying a lot of data 
+        that makes operations difficult and time consuming.
+
+Enablement of Tiered Storage on Apache Kafka cluster 
+    does not change the way producers and consumers interact with each other, 
+    it only impacts the data retention and data retrieval process.
+
+producer perspective 
+    In situations such as high data ingestion or temporary errors like network connectivity issues, 
+    the local storage may temporarily exceed the specified local retention threshold, 
+    resulting in an accumulation of additional data in local tier. 
+    The log cleaner will not remove this data until it has been successfully uploaded to remote storage.
+
+consumer perspective
+    For data retrieval consumer requests on Tiered Storage enabled topics, 
+    if the data is available in local storage, it is served from the local disk. 
+    If the requested data sits in the remote storage, the broker streams the data from 
+    it into its in-memory buffer (and on-disk cache), and then sends it back to the client.
+
+ 
 
     
 
