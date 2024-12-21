@@ -1,5 +1,3 @@
-https://developers.redhat.com/articles/2024/03/13/kafka-tiered-storage-deep-dive
-
 https://developers.redhat.com/articles/2023/11/22/getting-started-tiered-storage-apache-kafka
 
 https://www.kai-waehner.de/blog/2023/12/05/why-tiered-storage-for-apache-kafka-is-a-big-thing/
@@ -63,10 +61,17 @@ consumer perspective
     If the requested data sits in the remote storage, the broker streams the data from 
     it into its in-memory buffer (and on-disk cache), and then sends it back to the client.
 
- 
-
+ Tiered storage is a new early access feature available as of Apache Kafka 3.6.0 
+    that allows you to scale compute and storage resources independently, 
+    provides better client isolation, and allows faster maintenance of your Kafka cluster.
     
-
+Tiered storage must be enabled 
+    at the cluster level with remote.log.storage.system.enable, and 
+    at the topic level with remote.storage.enable. 
+    
+    There are two retention periods that can be configured 
+        at the topic level: local.log.retention.ms for local storage, 
+        and log.retention.ms for remote storage (size based retention is also available).
 
 
 
