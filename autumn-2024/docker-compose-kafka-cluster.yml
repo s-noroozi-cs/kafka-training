@@ -37,20 +37,6 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093'
       CLUSTER_ID: '1L6w3nShT-ewCtK--z86sw'
-  
-  kafka-4:
-    image: apache/kafka:3.7.0
-    container_name: kafka-4
-    environment:
-      KAFKA_NODE_ID: 4
-      KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://kafka-4:9092,CONTROLLER://kafka-4:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-4:9092
-      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-1:9093,2@kafka-2:9093,3@kafka-3:9093,4@kafka-4:9093'
-      CLUSTER_ID: '1L6w3nShT-ewCtK--z86sw'
-
 
   redpanda_console:
       image: redpandadata/console:v2.8.0

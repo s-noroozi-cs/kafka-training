@@ -37,3 +37,5 @@
 * https://medium.com/towards-data-engineering/unlock-the-power-of-apache-kafka-with-the-official-docker-image-5a65192e618b
 
 * https://socketdaddy.com/apache-kafka/kafka-reduce-partitions-why-its-not-allowed-and-how-to-work-around-it/
+
+* https://strimzi.io/blog/2022/09/16/reassign-partitions/

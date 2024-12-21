@@ -71,6 +71,20 @@ leader and flower
 
     add more broker
 
-        
+            distribute old topic between new broker(s)        
+            
+            create file with following content
+            
+                {"version": 1,"topics": [{ "topic": "test"}]}
+            
+            ./kafka-reassign-partitions.sh \
+                --bootstrap-server kafka-1:9092 \
+                --topics-to-move-json-file topics.json \
+                --broker-list 1,2,3,4 \
+                --generate
 
+            You can copy this proposed partition reassignment and paste it in a local reassignment.json
 
+            kafka-reassign-partitions.sh --bootstrap-server kafka-1:9092 --reassignment-json-file reassignment.json --execute
+
+            kafka-reassign-partitions.sh --bootstrap-server kafka-1:9092 --reassignment-json-file reassignment.json --verify
