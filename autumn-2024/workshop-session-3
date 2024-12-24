@@ -6,6 +6,22 @@ https://docs.confluent.io/platform/current/clusters/tiered-storage.html
 
 https://aiven.io/developer/kafka-tiered-storage-terraform
 
+https://medium.com/pinterest-engineering/pinterest-tiered-storage-for-apache-kafka-%EF%B8%8F-a-broker-decoupled-approach-c33c69e9958b
+
+https://www.infoq.com/news/2024/08/apache-kafka-tiered-storage/
+
+https://www.uber.com/en-DE/blog/kafka-tiered-storage/
+
+https://docs.aws.amazon.com/msk/latest/developerguide/msk-tiered-storage.html
+
+https://cwiki.apache.org/confluence/display/KAFKA/KIP-405%3A+Kafka+Tiered+Storage
+
+https://joshua-robinson.medium.com/simplify-kafka-at-scale-with-confluent-tiered-storage-ae8c1a2c9c80
+
+https://ytykhonchuk.medium.com/mock-amazon-s3-bucket-for-local-development-889440f9618e
+
+https://dev.to/israellopes/simulating-s3-bucket-on-localhost-41fh
+
 
 
 Traditional Kafka deployments often rely on 
