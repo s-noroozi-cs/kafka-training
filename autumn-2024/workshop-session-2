@@ -46,7 +46,11 @@ leader and flower
 
         auto.leader.rebalance.enable
 
+        KAFKA_AUTO_LEADER_REBALANCE_ENABLE
+
         leader.imbalance.check.interval.seconds
+
+        KAFKA_LEADER_IMBALANCE_CHECK_INTERVAL_SECONDS
 
     changes partitions
     $ kafka-topics.sh --bootstrap-server <broker:port> --topic <topic-name> --alter --partitions <number>
