@@ -10,6 +10,96 @@ docker run -d --rm -p 9092:9092 apache/kafka:3.7.0
                               --producer-props bootstrap.servers=localhost:9092
 
 ./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
+	  		--consumer-property client.id=test-client-id-1 \
+	  		--consumer-property enable.auto.commit=true \
+	  		--topic test --bootstrap-server localhost:9092
+
+./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
+	  		--consumer-property client.id=test-client-id-2 \
+	  		--consumer-property enable.auto.commit=true \
+	  		--topic test --bootstrap-server localhost:9092
+
+./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
 	  		--consumer-property client.id=test-client-id-3 \
 	  		--consumer-property enable.auto.commit=true \
 	  		--topic test --bootstrap-server localhost:9092
+
+parameters to tuning 
+
+  optimizing consumer throughput and latency
+      # ...
+      fetch.max.wait.ms=500
+      fetch.min.bytes=16384
+      # ...
+
+  avoiding data loss or duplication
+      # ...
+      enable.auto.commit=false
+      # ...
+
+  controlling transactional messages
+
+    on the producer side to guarantee exactly-once delivery
+
+      Consider using transactional ids and enabling idempotence 
+          (enable.idempotence=true) 
+          
+    On the consumer side, 
+      
+        you can then use the isolation.level property 
+        
+          to control how transactional messages are read by the consumer.
+
+          The isolation.level property has two valid values:
+
+            read_committed
+            read_uncommitted (default)
+
+        Set to read_committed so that only committed messages are read by the consumer.
+
+  Managing offset policy
+
+    # ...
+    heartbeat.interval.ms=3000
+    # Adjust the heartbeat interval lower according to anticipated rebalances.
+
+    session.timeout.ms=45000
+    # If no heartbeats are received by the Kafka broker before the timeout duration expires, 
+    # the consumer is removed from the consumer group and a rebalance is initiated. 
+    # If the broker configuration has a group.min.session.timeout.ms and group.max.session.timeout.ms, 
+    # the session timeout value must be within that range.
+
+
+    auto.offset.reset=earliest
+    # Set to earliest to return to the start of a partition and avoid data loss if offsets were not committed.
+    # ...
+
+    Suppose you deploy a consumer application for the first time, and it reads messages from an existing topic. 
+    Because this is the first time the group.id is used, the __consumer_offsets topic does not contain any offset 
+    information for this application. The new application can start processing all existing messages from the start 
+    of the log or only new messages. The default reset value is latest, which starts at the end of the partition, 
+    and consequently means some messages are missed. To avoid data loss, but increase the amount of processing, 
+    set auto.offset.reset to earliest to start at the beginning of the partition.
+
+
+  Minimizing the impact of rebalances
+
+  The rebalancing of a partition between active consumers in a group is the time it takes for:
+
+    Consumers to commit their offsets
+    The new consumer group to be formed
+    The group leader to assign partitions to group members
+    The consumers in the group to receive their assignments and start fetching
+
+
+    # ...
+      group.instance.id=UNIQUE-ID
+      # The unique instance id ensures that a new consumer instance receives the same assignment of topic partitions.
+
+      max.poll.interval.ms=300000
+      # Set the interval to check the consumer is continuing to process messages.
+
+      max.poll.records=500
+      # Sets the number of processed records returned from the consumer.
+
+    # ...
