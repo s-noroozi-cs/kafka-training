@@ -103,3 +103,64 @@ parameters to tuning
       # Sets the number of processed records returned from the consumer.
 
     # ...
+
+    log retention and clean up policies
+
+        support two type of retention polocies
+          
+          time based
+
+            log.retention.ms
+            log.retention.minutes
+            log.retention.hours
+
+          size based
+
+            log.retention.bytes
+
+    clean up policy
+      
+      log.cleanup.policy
+      # default value is delete
+      # valid values are delete and compact
+
+    
+
+    cat /opt/kafka/config/server.properties  | grep log
+
+      please check segment size
+
+
+
+scenario compact
+
+  KAFKA_LOG_CLEANUP_POLICY=compact
+
+    1-solution A
+    KAFKA_LOG_SEGMENT_BYTES=70
+    KAFKA_LOG_CLEANER_MIN_CLEANABLE_RATIO=0.01
+
+    2-solution B
+    KAFKA_LOG_CLEANER_MAX_COMPACTION_LAG_MS=100
+
+scenario retention
+
+    KAFKA_LOG_RETENTION_MS=3000
+
+    KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS=10000
+
+docker run --rm -it -p 9092:9092  \
+  --name broker \
+  -e KAFKA_NODE_ID=1 \
+  -e KAFKA_PROCESS_ROLES=broker,controller \
+  -e KAFKA_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093 \
+  -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 \
+  -e KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER \
+  -e KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT \
+  -e KAFKA_CONTROLLER_QUORUM_VOTERS=1@localhost:9093 \
+  -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 \
+  -e KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR=1 \
+  -e KAFKA_TRANSACTION_STATE_LOG_MIN_ISR=1 \
+  -e KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS=0 \
+  apache/kafka:3.7.0
+
