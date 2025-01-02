@@ -115,14 +115,66 @@ parameters to tuning
     decreasing replica size
 
     1. start kafka cluster with 3 node
+      
+      docker-compose -f docker-compose-kafka-cluster.yml up
+
     2. create topic with replication factor 3
+
+        open your browser and type localhost:8080
+        
+        choose topics section form left menu and create test topic with 3 partitions and 3 replicas
+
     3. using kafka-partiotion-reassignment tools to create current state of topic
+
+        got terminal from one of the kafka container - for example kafka-1
+
+        change current directory to /opt/kafka/bin
+
+        create file with name topics.json with following content
+
+           {"version": 1,"topics": [{ "topic": "test"}]}
+
+        ./kafka-reassign-partitions.sh \
+                --bootstrap-server kafka-1:9092 \
+                --topics-to-move-json-file topics.json \
+                --broker-list 1,2,3 \
+                --generate
+
+        copy Proposed partition reassignment configuration section to file with name test-new-assignment.json
+
+          {"version":1,"partitions":[{"topic":"test","partition":0,"replicas":[3,2,1],"log_dirs":["any","any","any"]},{"topic":"test","partition":1,"replicas":[1,3,2],"log_dirs":["any","any","any"]},{"topic":"test","partition":2,"replicas":[2,1,3],"log_dirs":["any","any","any"]}]}
+          
+        also for backup flow copy Current partition replica assignment to file with name test-origin-state.json
+          
+          {"version":1,"partitions":[{"topic":"test","partition":0,"replicas":[3,1,2],"log_dirs":["any","any","any"]},{"topic":"test","partition":1,"replicas":[1,2,3],"log_dirs":["any","any","any"]},{"topic":"test","partition":2,"replicas":[2,3,1],"log_dirs":["any","any","any"]}]}
+
+
     4. changing replica section based on your requierment 
+
+        change assignment json file , based on your requirment - change replication section - 
+
+            in our cases, we change replication factor from 3 to 2
+
+        {"version":1,"partitions":[{"topic":"test","partition":0,"replicas":[3,2],"log_dirs":["any","any"]},{"topic":"test","partition":1,"replicas":[1,3],"log_dirs":["any","any"]},{"topic":"test","partition":2,"replicas":[2,1],"log_dirs":["any","any"]}]}
+
     5. using kafka-partiotn-reassignment tools to execute your target changes
 
-    lets do it
+                    ./kafka-reassign-partitions.sh \
+                        --bootstrap-server kafka-1:9092 \
+                        --reassignment-json-file test-new-assignment.json \
+                        --execute
 
-    
+                please verify your changes
+
+                    ./kafka-reassign-partitions.sh \
+                        --bootstrap-server kafka-1:9092 \
+                        --reassignment-json-file test-new-assignment.json \
+                        --verify
+
+
+    6. we do it :-)
+
+
 
     log retention and clean up policies
 
