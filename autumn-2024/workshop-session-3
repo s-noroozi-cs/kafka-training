@@ -24,6 +24,13 @@ docker run -d --rm -p 9092:9092 apache/kafka:3.7.0
 	  		--consumer-property enable.auto.commit=true \
 	  		--topic test --bootstrap-server localhost:9092
 
+./kafka-console-consumer.sh --consumer-property group.id=test-consumer-group \
+	  		--consumer-property client.id=test-client-id-4 \
+	  		--consumer-property enable.auto.commit=true \
+	  		--topic test --bootstrap-server localhost:9092
+
+
+
 parameters to tuning 
 
   optimizing consumer throughput and latency
@@ -103,6 +110,19 @@ parameters to tuning
       # Sets the number of processed records returned from the consumer.
 
     # ...
+
+
+    decreasing replica size
+
+    1. start kafka cluster with 3 node
+    2. create topic with replication factor 3
+    3. using kafka-partiotion-reassignment tools to create current state of topic
+    4. changing replica section based on your requierment 
+    5. using kafka-partiotn-reassignment tools to execute your target changes
+
+    lets do it
+
+    
 
     log retention and clean up policies
 
