@@ -61,4 +61,6 @@ https://medium.com/real-time-streaming/apache-kafka-best-practices-d9fac5c483c0
 https://medium.com/@sunny_81705/what-makes-apache-kafka-so-fast-71b477dcbf0
 https://medium.com/@akash.d.goel/zookeeper-quorum-7916e342faf6
 https://www.mrjamiebowman.com/kafka-2/kafka-log-compaction/
+https://www.linkedin.com/pulse/confluent-replicator-vs-mirrormaker20-open-source-center-ishan-gandhi/
+https://blog.cloudera.com/kafka-replication-the-case-for-mirrormaker-2-0/
 https://www.mikulskibartosz.name/what-is-kafka-log-compaction-how-does-it-work/
