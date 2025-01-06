@@ -1,0 +1,12 @@
+backup pattern - cluster backup
+
+    active - active
+        kafka MirrorMaker tool
+
+    active - passive
+        manually solution
+            backup from disk
+            create new cluster - or prepare it 
+            restore your backup
+            start cluster
+            route your traffic to the new path 
