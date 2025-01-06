@@ -126,6 +126,8 @@ real scenario
 
     create simple configuration file, that contain following content:
 
-        clusters=source-kafka, target-kafka # naming is free, please select simple and meaningful name
-        source-kafka.bootstrap.servers = localhost:9092
-        target-kafka.bootstrap.servers = localhost:9094
+        clusters=source, target # naming is free, please select simple and meaningful name
+        source.bootstrap.servers = kafka-source:9092
+        target.bootstrap.servers = kafka-target:9094
+
+        also define kafka-source and kafka-target in your local dns or naming service or hosts file
