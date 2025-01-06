@@ -14,8 +14,74 @@ backup pattern - cluster backup
 
      kafka MirrorMaker tool
 
+        Typical MirrorMaker Use Cases
+
+            * Aggregation for Analytics
+
+                run batch analytics jobs 
+
+            * Data Deployment after Analytics
+
+                broadcast to multiple clusters possibly across data centers for end user consumption
+
+            * Isolation
+
+                access to data in a production environment is restricted for performance or security reasons
+
+            * Disaster Recovery
+
+                One of the most common enterprise use cases for cross-cluster replication is 
+                for guaranteeing business continuity in the presence of cluster or data center-wide outages.
+
+            * Geo Proximity
+
+                In geographically distributed access patterns where low latency is required, 
+                replication is used to move data closer to the access location
+
+            * Cloud Migration
+
+                As more enterprises have an on prem and cloud presence Kafka replication can be used to migrate data 
+                to the public or private cloud and back.
+
+            * Legal and Compliance
+
+                Much like the isolation uses case, a policy driven replication is used to limit 
+                what data is accessible in a cluster to meet legal and compliance requirements.
+
+
+
+
         v1
             The previous Kafka MirrorMaker had a lot of inherent limitations, 
+
+                * Static Whitelists and Blacklists
+                    Restarting MirrorMaker each time the list changes creates backlogs 
+                    in the replication pipeline causing operational pain points.
+                
+                * No Syncing of Topic Properties
+                    Even if the initial topic configuration was duplicated by an admin, any dynamic changes to the topic properties 
+                    are not going to be automatically reflected. These differences become an operational nightmare very quickly.
+
+                * Scalability and Throughput Limitations due to Rebalances
+                    MirrorMaker uses the high-level consumer to fetch data from the source cluster 
+                    where the partitions are assigned to the consumers within a consumer group via a group coordinator
+
+                    Each time there is a change in topics, say when a new topic is created or an old topic is deleted, 
+                    or a partition count is changed, or when MirrorMaker itself is bounced for a software upgrade, 
+                    it triggers a consumer rebalance which stalls the mirroring process and 
+                    creates a backlog in the pipeline and increases the end to end 
+                    latency observed by the downstream application. Such constant hiccups violate any 
+                    latency driven SLAs that a service dependent on mirrored pipeline needs to offer.
+
+                * Lack of Monitoring and Operational Support
+                    MirrorMaker provides minimal monitoring and management functions to configure, 
+                    launch and monitor the state of the pipeline and has no ability to trigger alerts 
+                    when there is a problem. Most enterprises require more than just the basic scripts 
+                    to start and stop a replication pipeline.
+                
+                * No Disaster Recovery Support
+
+                    
                 
                 * No guarantee of ordering of data inside a partition partitions, 
                 
@@ -48,3 +114,9 @@ backup pattern - cluster backup
                 * Tooling for offset translation.
 
                 * No data or partition rebalancing. gurantees ordering within partition
+
+        Multiple vendors and Internet service companies have their own proprietary solutions 
+            * Brooklin MirrorMaker from Linkedin
+            * Mirus from Salesforce
+            * uReplicator from Uber
+            * Confluent Replicator from Confluent
