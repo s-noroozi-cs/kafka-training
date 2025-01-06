@@ -51,7 +51,10 @@ backup pattern - cluster backup
 
 
 
-        v1
+        v1  
+            
+            kafka bin script path >>>>>  kafka-mirror-maker.sh
+            
             The previous Kafka MirrorMaker had a lot of inherent limitations, 
 
                 * Static Whitelists and Blacklists
@@ -79,10 +82,6 @@ backup pattern - cluster backup
                     when there is a problem. Most enterprises require more than just the basic scripts 
                     to start and stop a replication pipeline.
                 
-                * No Disaster Recovery Support
-
-                    
-                
                 * No guarantee of ordering of data inside a partition partitions, 
                 
                 * exact topic configs 
@@ -90,6 +89,7 @@ backup pattern - cluster backup
                 $ So the replicated kafka topic was not an exact replica of the source topic.
 
         v2
+            kafka bin script path >>>>>  connect-mirror-maker.sh
 
             Some of the highlights design are:
 
@@ -120,3 +120,12 @@ backup pattern - cluster backup
             * Mirus from Salesforce
             * uReplicator from Uber
             * Confluent Replicator from Confluent
+
+
+real scenario
+
+    create simple configuration file, that contain following content:
+
+        clusters=source-kafka, target-kafka # naming is free, please select simple and meaningful name
+        source-kafka.bootstrap.servers = localhost:9092
+        target-kafka.bootstrap.servers = localhost:9094
