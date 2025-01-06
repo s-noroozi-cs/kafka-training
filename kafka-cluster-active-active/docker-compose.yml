@@ -4,7 +4,7 @@ services:
     image: apache/kafka:3.7.0
     container_name: kafka-source
     ports:
-      9092:9092
+      - 9092:9092
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
@@ -14,17 +14,17 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-source:9093'
       CLUSTER_ID: 'source-kafka-cluster-id'
-
-kafka-target:
+ 
+ kafka-target:
     image: apache/kafka:3.7.0
     container_name: kafka-target
     ports:
-      9094:9094
+      - 9094:9094
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
       KAFKA_LISTENERS: PLAINTEXT://kafka-target:9094,CONTROLLER://kafka-target:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-target:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka-target:9094
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka-target:9093'
