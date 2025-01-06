@@ -126,8 +126,33 @@ real scenario
 
     create simple configuration file, that contain following content:
 
-        clusters=source, target # naming is free, please select simple and meaningful name
+        # specify any number of cluster aliases, naming is free, please select simple and meaningful name
+        clusters=source, target 
+
+        # connection information for each cluster
         source.bootstrap.servers = kafka-source:9092
         target.bootstrap.servers = kafka-target:9094
 
+        # enable and configure individual replication flows
+        source->target.enabled = true
+
+        # regex which defines which topics gets replicated. For eg "foo-.*"
+        source->target.topics = .*
+
+        # Setting replication factor of newly created remote topics
+        replication.factor=1
+
+        checkpoints.topic.replication.factor=1
+        heartbeats.topic.replication.factor=1
+        offset-syncs.topic.replication.factor=1
+
+        offset.storage.replication.factor=1
+        status.storage.replication.factor=1
+        config.storage.replication.factor=1
+
+
+
+
+
         also define kafka-source and kafka-target in your local dns or naming service or hosts file
+
