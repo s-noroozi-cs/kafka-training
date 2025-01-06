@@ -10,3 +10,41 @@ backup pattern - cluster backup
             restore your backup
             start cluster
             route your traffic to the new path 
+
+
+     kafka MirrorMaker tool
+
+        v1
+            The previous Kafka MirrorMaker had a lot of inherent limitations, 
+                
+                * No guarantee of ordering of data inside a partition partitions, 
+                
+                * exact topic configs 
+                
+                $ So the replicated kafka topic was not an exact replica of the source topic.
+
+        v2
+
+            Some of the highlights design are:
+
+                * Leverages the Kafka Connect framework and ecosystem.
+
+                * Includes both source and sink connectors.
+
+                * Includes a high-level driver that manages connectors in a dedicated cluster.
+
+                * Detects new topics, partitions.
+
+                * Automatically syncs topic configuration between clusters.
+
+                * Manages downstream topic ACL.
+
+                * Supports "active/active" cluster pairs, as well as any number of active clusters.
+
+                * Supports cross-datacenter replication, aggregation, and other complex topologies.
+
+                * Emits offsets required to migrate consumers between clusters.
+
+                * Tooling for offset translation.
+
+                * No data or partition rebalancing. gurantees ordering within partition
