@@ -156,3 +156,14 @@ real scenario
 
         also define kafka-source and kafka-target in your local dns or naming service or hosts file
 
+        to support imediatly any topics creations:
+
+            #Whether to periodically check for new topics and partitions
+
+            refresh.topics.enabled=true
+
+            #Frequency of topic refresh
+
+            refresh.topics.interval.seconds=10
+
+        
