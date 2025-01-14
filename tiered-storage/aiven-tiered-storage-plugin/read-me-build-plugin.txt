@@ -1,0 +1,13 @@
+$ git clone https://github.com/Aiven-Open/tiered-storage-for-apache-kafka.git
+
+$ cd tiered-storage-for-apache-kafka
+
+$ make build
+
+$ cp build/distributions/tiered-storage-for-apache-kafka-*.tgz ~/aiven-tiered-storage-plugin &&
+    tar xf tiered-storage-for-apache-kafka-*.tgz --strip-components=1 &&
+    rm tiered-storage-for-apache-kafka-*.tgz
+
+$ cp storage/s3/build/distributions/s3-*.tgz ~/aiven-tiered-storage-plugin &&
+    tar xf s3-*.tgz --strip-components=1 &&
+    rm s3-*.tgz
