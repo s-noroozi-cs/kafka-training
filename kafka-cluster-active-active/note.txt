@@ -167,3 +167,25 @@ real scenario
             refresh.topics.interval.seconds=10
 
         
+
+
+$ docker compose up
+
+$ $KAFKA_HOME/bin/connect-mirror-maker.sh mm2.properties
+
+$ $KAFKA_HOME/bin/kafka-topics.sh --bootstrap-server localhost:9092 --create --topic test
+
+$ $KAFKA_HOME/bin/kafka-topics.sh --bootstrap-server localhost:9092 --list
+
+$ $KAFKA_HOME/bin/kafka-topics.sh --bootstrap-server localhost:9094 --list
+
+$ $KAFKA_HOME/bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
+
+# include topic name RegExp could be change based seperator config in mm2.properties
+# maybe some terminal interpreter such as zsh prevent to regExp, using bash or keeping your RegExp in single or double qutoes 
+
+$ $KAFKA_HOME/bin/kafka-console-consumer.sh --bootstrap-server localhost:9094 --include .*test
+
+enjoy active-active cluster
+
+
