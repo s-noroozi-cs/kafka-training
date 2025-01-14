@@ -2,6 +2,7 @@ reference artice:
     
     https://developers.redhat.com/articles/2023/11/22/getting-started-tiered-storage-apache-kafka#build_the_aiven_tiered_storage_plug_in
 
+    https://www.kai-waehner.de/blog/2023/12/05/why-tiered-storage-for-apache-kafka-is-a-big-thing/
 
     docker compose up
 
