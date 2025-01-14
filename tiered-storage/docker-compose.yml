@@ -1,0 +1,74 @@
+version: '3.8'
+services:
+  source-broker:
+    image: apache/kafka:3.7.0
+    hostname: source-broker
+    container_name: source-broker
+    ports:
+      - 9092:9092
+    volumes:
+      - ./aiven-tiered-storage-plugin:/opt/tiered-storage
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://source-broker:29092,PLAINTEXT_HOST://localhost:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+      KAFKA_PROCESS_ROLES: broker,controller
+      KAFKA_NODE_ID: 1
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@source-broker:29093
+      KAFKA_LISTENERS: PLAINTEXT://source-broker:29092,CONTROLLER://source-broker:29093,PLAINTEXT_HOST://0.0.0.0:9092
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
+      CLUSTER_ID: source-broker-cluster-id
+
+
+      # enabling tiered storage 
+      KAFKA_REMOTE_LOG_STORAGE_SYSTEM_ENABLE: true
+      KAFKA_REMOTE_LOG_STORAGE_MANAGER_CLASS_PATH: /opt/tiered-storage/*
+      KAFKA_REMOTE_LOG_STORAGE_MANAGER_IMPL_PREFIX: rsm.config.
+      KAFKA_REMOTE_LOG_STORAGE_MANAGER.CLASS.NAME: io.aiven.kafka.tieredstorage.RemoteStorageManager
+
+      KAFKA_REMOTE_LOG_METADATA_MANAGER_IMPL_PREFIX: rlmm.config.
+      KAFKA_REMOTE_LOG_METADATA_MANAGER_LISTENER_NAME: PLAINTEXT
+      KAFKA_RLMM_CONFIG_REMOTE_LOG_METADATA_TOPIC_REPLICATION_FACTOR: 1
+
+      # configurations related to tiered storage
+      KAFKA_RSM_CONFIG_STORAGE_BACKEND_CLASS: io.aiven.kafka.tieredstorage.storage.s3.S3Storage
+      KAFKA_RSM_CONFIG_CHUNK_SIZE: 5242880
+      KAFKA_RSM_CONFIG_STORAGE_S3_BUCKET_NAME: kafka-tiered-storage-bucket
+      KAFKA_RSM_CONFIG_STORAGE_S3_ENDPOINT_URL: "http://minio:9000"
+      KAFKA_RSM_CONFIG_STORAGE_S3_REGION: "us-east-1"
+      KAFKA_RSM_CONFIG_STORAGE_S3_PATH_STYLE_ACCESS_ENABLED: true
+      KAFKA_RSM_CONFIG_STORAGE_AWS_ACCESS_KEY_ID: "minioadmin"
+      KAFKA_RSM_CONFIG_STORAGE_AWS_SECRET_ACCESS_KEY: "minioadmin"
+
+
+  minio:
+    image: quay.io/minio/minio
+    hostname: minio
+    container_name: minio
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    environment:
+      MINIO_ROOT_USER: minio_user
+      MINIO_ROOT_PASSWORD: minio_pass
+    command: server /data --console-address ":9090"
+
+  minio-createbucket:
+    image: quay.io/minio/mc
+    restart: ""
+    depends_on:
+      - minio
+    entrypoint: >
+      /bin/sh -c "
+      echo 'wait 3 seconds for minio start successfully'; 
+      sleep 3;
+      /usr/bin/mc config host add local http://minio:9000 minio_user minio_pass;
+      /usr/bin/mc mb local/kafka-tiered-storage-bucket;
+      exit 0;
+      "
