@@ -7,7 +7,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>token-issuer</module>
-
+        <module>issuer</module>
+        <module>validator</module>
     </modules>
 </project>
