@@ -12,4 +12,15 @@
         <module>client-side-auth</module>
         <module>oauth-bearer</module>
     </modules>
+
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-api</artifactId>
+                <version>0.13.0</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>
