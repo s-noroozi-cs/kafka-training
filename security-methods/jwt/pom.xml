@@ -8,7 +8,7 @@
 
     <modules>
         <module>issuer</module>
-        <module>validator</module>
+        <module>auth-handler-broker-side</module>
         <module>client-side-auth</module>
         <module>oauth-bearer</module>
     </modules>
