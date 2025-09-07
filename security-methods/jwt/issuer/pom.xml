@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.kafka.security.jwt</groupId>
     <artifactId>issuer</artifactId>
-    <version>0.0.1</version>
+    <version>${module.version}</version>
 
     <parent>
         <groupId>org.kafka.security</groupId>
@@ -14,7 +14,6 @@
     <packaging>jar</packaging>
 
     <dependencies>
-
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>

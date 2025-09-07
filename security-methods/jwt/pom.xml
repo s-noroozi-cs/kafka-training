@@ -13,13 +13,30 @@
         <module>oauth-bearer</module>
     </modules>
 
+    <properties>
+        <io.jsonwebtoken.jjwt-api.version>0.13.0</io.jsonwebtoken.jjwt-api.version>
+        <org.apache.kafka.kafka-clients.version>4.1.0</org.apache.kafka.kafka-clients.version>
+
+        <module.version>0.0.1</module.version>
+    </properties>
+
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
-                <version>0.13.0</version>
+                <version>${io.jsonwebtoken.jjwt-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.kafka</groupId>
+                <artifactId>kafka-clients</artifactId>
+                <version>${org.apache.kafka.kafka-clients.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.kafka.security.jwt</groupId>
+                <artifactId>issuer</artifactId>
+                <version>${module.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -2,9 +2,27 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.kafka.security.jwt</groupId>
     <artifactId>auth-handler-broker-side</artifactId>
-    <version>0.0.1</version>
+    <version>${module.version}</version>
+
+    <parent>
+        <groupId>org.kafka.security</groupId>
+        <artifactId>jwt</artifactId>
+        <version>0.0.1</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <packaging>jar</packaging>
 
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.kafka.security.jwt</groupId>
+            <artifactId>issuer</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>
