@@ -29,14 +29,14 @@ public class JwtValidatorCallbackHandler implements AuthenticateCallbackHandler 
           Claims claims = JwtTokenGenerator.validateToken(validationCallback.tokenValue());
 
           // Set principal and scope
-          validationCallback.token().principal().getName(); // Username
+          validationCallback.token().principalName(); // Username
           validationCallback.token().scope(); // Roles/permissions
 
-          validationCallback.token().startTime(); // Token issue time
-          validationCallback.token().expirationTime(); // Token expiration
+          validationCallback.token().startTimeMs(); // Token issue time
+          validationCallback.token().lifetimeMs(); // Token expiration
 
         } catch (Exception e) {
-          validationCallback.error("invalid_token", "Token validation failed: " + e.getMessage());
+          validationCallback.error("invalid_token", "Token validation failed: ", e.getMessage());
         }
       } else {
         throw new UnsupportedCallbackException(callback);

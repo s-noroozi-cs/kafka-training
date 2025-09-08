@@ -23,6 +23,10 @@
             <groupId>org.kafka.security.jwt</groupId>
             <artifactId>issuer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt-api</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
