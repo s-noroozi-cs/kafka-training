@@ -4,10 +4,7 @@ import io.jsonwebtoken.Claims;
 import org.apache.kafka.common.security.oauthbearer.OAuthBearerToken;
 import org.kafka.security.jwt.issuer.JwtTokenGenerator;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class CustomOAuthBearerToken implements OAuthBearerToken {
 
@@ -44,7 +41,7 @@ public class CustomOAuthBearerToken implements OAuthBearerToken {
     // Extract roles from claims
     Object roles = claims.get("roles");
     if (roles instanceof List) {
-      return Set.copyOf((Collection<String>) roles);
+      return new HashSet<>((Collection<String>) roles);
     }
     return Collections.emptySet();
   }
