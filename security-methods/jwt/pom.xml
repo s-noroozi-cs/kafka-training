@@ -10,7 +10,6 @@
         <module>issuer</module>
         <module>auth-handler-broker-side</module>
         <module>client-side-producer</module>
-        <module>oauth-bearer</module>
     </modules>
 
     <properties>
