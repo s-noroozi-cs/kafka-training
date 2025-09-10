@@ -1,9 +1,12 @@
 package org.kafka.security.jwt.client_side.producer;
 
 import org.apache.kafka.clients.CommonClientConfigs;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.kafka.security.jwt.client_side.auth.CustomLoginCallbackHandler;
 
 import java.util.Properties;
 
