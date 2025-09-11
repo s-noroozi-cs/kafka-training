@@ -21,18 +21,18 @@ public class JwtAuthenticatedProducer {
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class.getName());
 
     // Security configuration
-    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
-    props.put(SaslConfigs.SASL_MECHANISM, "OAUTHBEARER");
-    props.put(
-        SaslConfigs.SASL_JAAS_CONFIG,
-        "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required "
-            + "oauth.token=\""
-            + jwtToken
-            + "\";");
+    /*props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
+        props.put(SaslConfigs.SASL_MECHANISM, "OAUTHBEARER");
+        props.put(
+            SaslConfigs.SASL_JAAS_CONFIG,
+            "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required "
+                + "oauth.token=\""
+                + jwtToken
+                + "\";");
 
-    props.put(
-        SaslConfigs.SASL_LOGIN_CALLBACK_HANDLER_CLASS, CustomLoginCallbackHandler.class.getName());
-
+        props.put(
+            SaslConfigs.SASL_LOGIN_CALLBACK_HANDLER_CLASS, CustomLoginCallbackHandler.class.getName());
+    */
     return props;
   }
 
