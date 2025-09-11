@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.kafka.security.jwt</groupId>
     <artifactId>issuer</artifactId>
-    <version>${module.version}</version>
+    <version>0.0.1</version>
 
     <parent>
         <groupId>org.kafka.security</groupId>

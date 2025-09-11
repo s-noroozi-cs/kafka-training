@@ -15,10 +15,10 @@
     <properties>
         <java.version>21</java.version>
 
-        <io.jsonwebtoken.jjwt-api.version>0.13.0</io.jsonwebtoken.jjwt-api.version>
+        <io.jsonwebtoken.jjwt.version>0.13.0</io.jsonwebtoken.jjwt.version>
         <org.apache.kafka.kafka-clients.version>4.1.0</org.apache.kafka.kafka-clients.version>
 
-        <module.version>0.0.1</module.version>
+        <logback.version>1.5.18</logback.version>
     </properties>
 
 
@@ -27,17 +27,35 @@
             <dependency>
                 <groupId>io.jsonwebtoken</groupId>
                 <artifactId>jjwt-api</artifactId>
-                <version>${io.jsonwebtoken.jjwt-api.version}</version>
+                <version>${io.jsonwebtoken.jjwt.version}</version>
             </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-impl</artifactId>
+                <version>${io.jsonwebtoken.jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt-jackson</artifactId>
+                <version>${io.jsonwebtoken.jjwt.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.kafka</groupId>
                 <artifactId>kafka-clients</artifactId>
                 <version>${org.apache.kafka.kafka-clients.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.kafka.security.jwt</groupId>
-                <artifactId>issuer</artifactId>
-                <version>${module.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.5</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
