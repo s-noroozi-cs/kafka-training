@@ -1,18 +1,72 @@
+version: '3.8'
+
 services:
-  broker:
+  # OAuth2/OIDC Mock Server (Keycloak for testing)
+  # keycloak:
+  #   image: quay.io/keycloak/keycloak:latest
+  #   environment:
+  #     KEYCLOAK_ADMIN: admin
+  #     KEYCLOAK_ADMIN_PASSWORD: admin
+  #     KC_HTTP_ENABLED: true
+  #     KC_HOSTNAME_STRICT: false
+  #   ports:
+  #     - "8080:8080"
+  #   command: start-dev
+  #   networks:
+  #     - kafka-network
+
+  # Kafka Broker with KRaft and SASL OAuth2
+  kafka:
     image: apache/kafka:4.1.0
-    container_name: broker
+    hostname: kafka
+    container_name: kafka
     ports:
       - "9092:9092"
+      - "9093:9093"
     environment:
       KAFKA_NODE_ID: 1
       KAFKA_PROCESS_ROLES: broker,controller
-      KAFKA_LISTENERS: PLAINTEXT://broker:9092,CONTROLLER://localhost:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker:9092
+      KAFKA_LISTENERS: INTERNAL://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: INTERNAL://kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INTERNAL:SASL_PLAINTEXT,CONTROLLER:PLAINTEXT,EXTERNAL:SASL_PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@localhost:9093
-      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
-      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
-      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
+      KAFKA_INTER_BROKER_LISTENER_NAME: INTERNAL
+      
+      # KRaft Configuration
+      KAFKA_CONTROLLER_QUORUM_VOTERS: 1@kafka:9093
+      
+      # SASL OAuth2 Configuration
+      KAFKA_SASL_ENABLED_MECHANISMS: OAUTHBEARER
+      KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: OAUTHBEARER
+      
+      # OAuth2 Server Configuration
+      KAFKA_OPAUTH_TOKEN_ENDPOINT_URI: http://keycloak:8080/realms/master/protocol/openid-connect/token
+      KAFKA_OPAUTH_JWKS_ENDPOINT_URI: http://keycloak:8080/realms/master/protocol/openid-connect/certs
+      KAFKA_OPAUTH_VALID_ISSUER_URI: http://keycloak:8080/realms/master
+      KAFKA_OPAUTH_USERNAME_CLAIM: preferred_username
+      KAFKA_OPAUTH_GROUPS_CLAIM: groups
+      
+      # JAAS Configuration for OAuth2
+      KAFKA_LISTENER_NAME_INTERNAL_OAUTHBEARER_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
+        oauth.token.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/token"
+        oauth.jwks.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+        oauth.valid.issuer.uri="http://keycloak:8080/realms/master"
+        oauth.username.claim="preferred_username"
+        oauth.groups.claim="groups";
+      
+      KAFKA_LISTENER_NAME_EXTERNAL_OAUTHBEARER_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
+        oauth.token.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/token"
+        oauth.jwks.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+        oauth.valid.issuer.uri="http://keycloak:8080/realms/master"
+        oauth.username.claim="preferred_username"
+        oauth.groups.claim="groups";
+      
+      # Server properties for OAuth2
+      KAFKA_OPAUTH_SASL_SERVER_CALLBACK_HANDLER_CLASS: org.apache.kafka.common.security.oauthbearer.OAuthBearerValidatorCallbackHandler
+      KAFKA_OPAUTH_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required
+        oauth.token.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/token"
+        oauth.jwks.endpoint.uri="http://keycloak:8080/realms/master/protocol/openid-connect/certs"
+        oauth.valid.issuer.uri="http://keycloak:8080/realms/master";
