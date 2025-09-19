@@ -1,0 +1,12 @@
+https://codemia.io/knowledge-hub/path/kafka-topicssh_authentication
+
+https://docs.arenadata.io/en/ADStreaming/current/how-to/kafka/access_management/authentication/sasl_plain.html
+
+https://forum.confluent.io/t/kafka-kraft-sasl-plaintext/6478
+
+https://azureserv.com/@nishith.explorer/kafka-security-made-simple-sasl-plain-authentication-06b5c727a671?__cpo=aHR0cHM6Ly9tZWRpdW0uY29t
+
+https://freedium.cfd/https://medium.com/@nishith.explorer/kafka-security-made-simple-sasl-plain-authentication-06b5c727a671
+
+https://medium.com/@nishith.explorer/kafka-security-made-simple-sasl-plain-authentication-06b5c727a671
+
